@@ -1,5 +1,6 @@
 export const Images = {
 
+    SplashScreen:require('./SplashScreen.png'),
     THREELINE: require('./ThreeLine.png'),
     USER: require('./user.png'),
 

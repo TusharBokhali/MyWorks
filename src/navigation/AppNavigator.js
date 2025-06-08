@@ -1,19 +1,19 @@
-import { View, Text } from 'react-native'
+import { View, Text, StatusBar } from 'react-native'
 import React from 'react'
-import { NavigationContainer } from '@react-navigation/native'
-import HomeScreen from '../screen/HomeScreen'
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-
-
-const Stack = createNativeStackNavigator();
-
-const AppNavigator = () => {
-
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import HomeScreen from '../screen/HomeScreen';
+import { NavigationContainer } from '@react-navigation/native';
+import { Colors } from '../utils/Theme';
+import SplashScreen from '../screen/SplashScreen';
+export default function AppNavigator() {
+    const Stack = createNativeStackNavigator();
     return (
         <NavigationContainer>
-            <Stack.Screen name="HomeScreen" component={HomeScreen} />
+         <StatusBar backgroundColor="transparent" barStyle="light-content" translucent={true} />
+            <Stack.Navigator screenOptions={{headerShown:false}} initialRouteName='SplashScreen'>
+                <Stack.Screen name='HomeScreen' component={HomeScreen} />
+                <Stack.Screen name='SplashScreen' component={SplashScreen} />
+            </Stack.Navigator>
         </NavigationContainer>
     )
 }
-
-export default AppNavigator
