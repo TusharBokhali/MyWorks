@@ -1,8 +1,9 @@
 export const Images = {
 
-    SplashScreen:require('./SplashScreen.png'),
+    SplashScreen: require('./SplashScreen.png'),
     THREELINE: require('./ThreeLine.png'),
     USER: require('./user.png'),
+    RENT: require('./RentManagement.png'),
 
     ROOMTOTAL: require('./RoomTotal.png'),
     TENATES: require('./Tenates.png'),

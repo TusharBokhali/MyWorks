@@ -1,18 +1,18 @@
-import { View, SafeAreaView, Text, StatusBar } from 'react-native';
+import {View, SafeAreaView, Text, StatusBar} from 'react-native';
 import React from 'react';
 import AppNavigator from './src/navigation/AppNavigator';
-import HomeScreen from './src/screen/HomeScreen';
-import { Colors } from './src/utils/Theme';
+import {NavigationContainer} from '@react-navigation/native';
 
 const App = () => {
-  // return <AppNavigator />;
-
   return (
-    // <View>
-    <>
+    <NavigationContainer>
+      <StatusBar
+        backgroundColor="#5149E6"
+        barStyle="light-content"
+        translucent={true}
+      />
       <AppNavigator />
-    </>
-    // </View>
+    </NavigationContainer>
   );
 };
 

@@ -27,9 +27,14 @@ import Animated, {
   FadeInLeft,
   FadeInRight,
   FadeInUp,
+  useSharedValue,
 } from 'react-native-reanimated';
 import CustomButton from '../component/CustomButton';
+import Header from '../component/Header';
+import DrawerView from '../navigation/DrawerNavigator';
 const HomeScreen = () => {
+  const translateX = useSharedValue(0);
+
   const AnimatedCard = Animated.createAnimatedComponent(TouchableOpacity);
   const [MyWidth, setMyWidth] = useState(Dimensions.get('window').width);
 
@@ -87,6 +92,12 @@ const HomeScreen = () => {
     return () => subscription?.remove();
   }, []);
 
+  const DrawerHandle = () => {
+    translateX.value = !(translateX.value == 0)
+      ? withTiming(0, {duration: 500})
+      : withTiming(-(MyWidth * 0.8), {duration: 500});
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
@@ -96,53 +107,7 @@ const HomeScreen = () => {
         }}
         showsVerticalScrollIndicator={false}>
         <View style={styles.container}>
-          <View style={styles.HeaderMainView}>
-            <TouchableOpacity
-              style={{
-                backgroundColor: '#1d1d3b',
-                padding: moderateScale(6),
-                borderRadius: moderateScale(12),
-              }}>
-              <Animated.Image
-                entering={FadeInLeft.duration(500).delay(200)}
-                source={Images.THREELINE}
-                style={{width: moderateScale(32), height: moderateScale(32)}}
-              />
-            </TouchableOpacity>
-            <Animated.View
-              style={styles.HederCenterStyle}
-              entering={FadeInUp.duration(500).delay(200)}>
-              <Text style={styles.HeaderText}>Sebzy</Text>
-              <Text style={styles.HeaderTextSmall}>PG Management</Text>
-            </Animated.View>
-            <AnimatedCard
-              entering={FadeInRight.duration(500).delay(200)}
-              style={{
-                backgroundColor: '#1d1d3b',
-                padding: moderateScale(6),
-                borderRadius: moderateScale(12),
-                flexDirection: 'row',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Image
-                style={{
-                  width: moderateScale(32),
-                  height: moderateScale(32),
-                  backgroundColor: '#FFF',
-                  borderRadius: moderateScale(8),
-                }}
-                source={Images.USER}
-              />
-              <View style={{marginLeft: moderateScale(8)}}>
-                <Text style={[styles.HeaderText]}>Johan</Text>
-                <Text style={[styles.HeaderTextSmall, {color: '#FFF'}]}>
-                  India
-                </Text>
-              </View>
-            </AnimatedCard>
-          </View>
-
+          <Header functions={() => DrawerHandle()} />
           <View style={styles.SectionMainView}>
             <Animated.View
               entering={FadeInUp.duration(500).delay(200)}
@@ -376,6 +341,7 @@ const HomeScreen = () => {
           </View>
         </View>
       </ScrollView>
+      <DrawerView translateX={translateX} />
     </SafeAreaView>
   );
 };
@@ -387,27 +353,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.GUNMETAL,
   },
-  HeaderMainView: {
-    flex: 1,
-    height: moderateScale(70),
-    backgroundColor: '#1B243F',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: horizontalScale(16),
-    alignItems: 'center',
-  },
-  HeaderText: {
-    fontSize: moderateScale(18),
-    fontFamily: Fonts.POPPINS_SEMIBOLD,
-    color: '#FFF',
-    fontWeight: 700,
-  },
-  HeaderTextSmall: {
-    fontSize: moderateScale(14),
-    fontFamily: Fonts.POPPINS_SEMIBOLD,
-    color: '#A1AFF6',
-  },
-  HederCenterStyle: {},
+
   SectionMainView: {
     flex: 1,
     maxHeight: '100%',
