@@ -3,6 +3,7 @@ import React from 'react'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6'
 import { screenWidth } from '../utils/Metrics'
+import { checkIfConfigIsValid } from 'react-native-reanimated/lib/typescript/animation/springUtils'
 export default function CustomButton({
     Bg,
     img,
@@ -32,7 +33,8 @@ export default function CustomButton({
 
 const styles = StyleSheet.create({
     Btn:{
-        width:'70%',
+        flex:1,
+        // width:'70%',
         height:screenWidth * 0.15,
         borderRadius:7,
         justifyContent:'center',
@@ -46,3 +48,4 @@ const styles = StyleSheet.create({
         fontSize:15
     }
 })
+

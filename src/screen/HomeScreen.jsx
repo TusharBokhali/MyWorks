@@ -9,24 +9,30 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
-import CommonLayout from '../component/CommonLayout';
-import { Colors, Fonts } from '../utils/Theme';
+import React, {useEffect, useState} from 'react';
+import {Colors, Fonts} from '../utils/Theme';
 import {
   horizontalScale,
   moderateScale,
   screenWidth,
   verticalScale,
 } from '../utils/Metrics';
-import { Images } from '../assets/image/image';
+import {Images} from '../assets/image/image';
 import * as Progress from 'react-native-progress';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import Octicons from 'react-native-vector-icons/Octicons'
-import Animated, { createAnimatedComponent, FadeIn, FadeInLeft, FadeInRight, FadeInUp } from 'react-native-reanimated'
+import {SafeAreaView} from 'react-native-safe-area-context';
+import Octicons from 'react-native-vector-icons/Octicons';
+import Animated, {
+  createAnimatedComponent,
+  FadeIn,
+  FadeInLeft,
+  FadeInRight,
+  FadeInUp,
+} from 'react-native-reanimated';
 import CustomButton from '../component/CustomButton';
 const HomeScreen = () => {
   const AnimatedCard = Animated.createAnimatedComponent(TouchableOpacity);
   const [MyWidth, setMyWidth] = useState(Dimensions.get('window').width);
+
   const Data = [
     {
       id: 1,
@@ -36,7 +42,7 @@ const HomeScreen = () => {
       range: 0.2,
       button: 'Manage Rooms',
       img: Images.ROOMTOTAL,
-      color: '#1b54e3'
+      color: '#1b54e3',
     },
     {
       id: 2,
@@ -46,7 +52,7 @@ const HomeScreen = () => {
       range: 0.2,
       button: 'View all tenants',
       img: Images.TENATES,
-      color: '#41bf95'
+      color: '#41bf95',
     },
     {
       id: 3,
@@ -56,7 +62,7 @@ const HomeScreen = () => {
       range: 0.2,
       button: 'View pending rents',
       img: Images.PENDING,
-      color: '#eda743'
+      color: '#eda743',
     },
     {
       id: 4,
@@ -66,14 +72,14 @@ const HomeScreen = () => {
       range: 0.2,
       button: 'Manage vacant rooms',
       img: Images.VACANT,
-      color: '#ea5d5d'
+      color: '#ea5d5d',
     },
   ];
-  useEffect(() => {
-    const onChange = ({ window }) => {
-      setMyWidth(window.width);
-      console.log("window", window.width);
 
+  useEffect(() => {
+    const onChange = ({window}) => {
+      setMyWidth(window.width);
+      console.log('window', window.width);
     };
 
     const subscription = Dimensions.addEventListener('change', onChange);
@@ -100,12 +106,12 @@ const HomeScreen = () => {
               <Animated.Image
                 entering={FadeInLeft.duration(500).delay(200)}
                 source={Images.THREELINE}
-                style={{ width: moderateScale(32), height: moderateScale(32) }}
+                style={{width: moderateScale(32), height: moderateScale(32)}}
               />
             </TouchableOpacity>
-            <Animated.View style={styles.HederCenterStyle}
-              entering={FadeInUp.duration(500).delay(200)}
-            >
+            <Animated.View
+              style={styles.HederCenterStyle}
+              entering={FadeInUp.duration(500).delay(200)}>
               <Text style={styles.HeaderText}>Sebzy</Text>
               <Text style={styles.HeaderTextSmall}>PG Management</Text>
             </Animated.View>
@@ -128,11 +134,10 @@ const HomeScreen = () => {
                 }}
                 source={Images.USER}
               />
-              <View style={{ marginLeft: moderateScale(8) }}>
-                {/* <View> */}
+              <View style={{marginLeft: moderateScale(8)}}>
                 <Text style={[styles.HeaderText]}>Johan</Text>
-                <Text style={[styles.HeaderTextSmall, { color: '#FFF' }]}>
-                  Surat
+                <Text style={[styles.HeaderTextSmall, {color: '#FFF'}]}>
+                  India
                 </Text>
               </View>
             </AnimatedCard>
@@ -150,12 +155,12 @@ const HomeScreen = () => {
               <Text
                 style={[
                   styles.HeaderText,
-                  { color: '#FFF', fontSize: moderateScale(22) },
+                  {color: '#FFF', fontSize: moderateScale(22)},
                 ]}>
                 Welcome, Johan
               </Text>
-              <Text style={[styles.HeaderTextSmall, { color: '#b1b1c7' }]}>
-                Surat - Manage your PG hostel efficiently with our comprehensive
+              <Text style={[styles.HeaderTextSmall, {color: '#b1b1c7'}]}>
+                India - Manage your PG hostel efficiently with our comprehensive
                 dashboard
               </Text>
             </Animated.View>
@@ -169,7 +174,7 @@ const HomeScreen = () => {
                 style={{
                   width: moderateScale(5),
                   height: moderateScale(20),
-                  backgroundColor: 'red',
+                  backgroundColor: '#5149E6',
                   borderRadius: moderateScale(20),
                   marginLeft: -5,
                 }}
@@ -182,7 +187,7 @@ const HomeScreen = () => {
                 <Text
                   style={[
                     styles.HeaderText,
-                    { color: '#FFF', fontSize: moderateScale(22) },
+                    {color: '#FFF', fontSize: moderateScale(22)},
                   ]}>
                   Dashboard Overview
                 </Text>
@@ -198,7 +203,7 @@ const HomeScreen = () => {
                 borderRadius: moderateScale(8),
                 alignItems: 'center',
                 padding: moderateScale(8),
-                marginBottom: 20
+                marginBottom: 20,
               }}>
               <Text
                 style={[
@@ -215,10 +220,12 @@ const HomeScreen = () => {
             <FlatList
               data={Data}
               nestedScrollEnabled={true}
-              contentContainerStyle={{ paddingBottom: 30 }}
-              renderItem={({ item, index }) => {
+              contentContainerStyle={{paddingBottom: 30}}
+              renderItem={({item, index}) => {
                 return (
-                  <AnimatedCard entering={FadeInUp.duration(500).delay(200)} style={styles.BoxMain}>
+                  <AnimatedCard
+                    entering={FadeInUp.duration(500).delay(200)}
+                    style={styles.BoxMain}>
                     <View
                       style={{
                         flexDirection: 'row',
@@ -240,35 +247,33 @@ const HomeScreen = () => {
                           source={item.img}
                         />
                       </View>
-                      <View style={{ marginLeft: moderateScale(10) }}>
+                      <View style={{marginLeft: moderateScale(10)}}>
                         <Text
                           style={[
                             styles.HeaderTextSmall,
-                            { color: item.color, fontSize: moderateScale(16) },
+                            {color: item.color, fontSize: moderateScale(16)},
                           ]}>
                           {item.title}
                         </Text>
                         <Text
                           style={[
                             styles.HeaderText,
-                            { fontWeight: 800, fontSize: 20 },
+                            {fontWeight: 800, fontSize: 20},
                           ]}>
                           {item.num}
                         </Text>
                       </View>
                     </View>
-                    <Text style={styles.TextToSmall}>
-                      {item.text}
-                    </Text>
+                    <Text style={styles.TextToSmall}>{item.text}</Text>
 
                     <View
                       style={{
                         marginVertical: moderateScale(10),
-                        width: screenWidth - 40, // ✅ Define width of parent
-                        alignSelf: 'center', // ✅ Optional: centers the bar on screen
+                        width: screenWidth - 40,
+                        alignSelf: 'center',
                       }}>
                       <Progress.Bar
-                        progress={0.2}
+                        progress={0.2} // 20% progresed
                         color="#5386e6"
                         unfilledColor="#a6a9ad"
                         borderWidth={0}
@@ -276,41 +281,70 @@ const HomeScreen = () => {
                         animated={true}
                         useNativeDriver={true}
                         width={MyWidth > 700 ? MyWidth * 0.86 : MyWidth * 0.82}
-                        style={{ marginHorizontal: 10, alignSelf: 'center' }}
+                        style={{marginHorizontal: 10, alignSelf: 'center'}}
                       />
                     </View>
                     <View style={styles.IconAndTitle}>
-                      <Text style={[styles.MAnageRooms, { color: item.color }]}>{item.button}</Text>
-                      <View style={{ marginTop: 5 }}>
-                        <Octicons name={'arrow-right'} color={item.color} size={18} />
+                      <Text style={[styles.MAnageRooms, {color: item.color}]}>
+                        {item.button}
+                      </Text>
+                      <View style={{marginTop: 5}}>
+                        <Octicons
+                          name={'arrow-right'}
+                          color={item.color}
+                          size={18}
+                        />
                       </View>
                     </View>
                   </AnimatedCard>
-                )
+                );
               }}
             />
-            <Animated.View entering={FadeInUp.duration(500).delay(200)} style={styles.ActionMain}>
+            <Animated.View
+              entering={FadeInUp.duration(500).delay(200)}
+              style={styles.ActionMain}>
               <View style={styles.flex}>
-                <View style={[styles.verticalLine, { backgroundColor: 'red' }]} />
+                <View
+                  style={[styles.verticalLine, {backgroundColor: '#5149E6'}]}
+                />
                 <Text style={styles.HeadingText}>Quick Actions</Text>
               </View>
-              <View style={{ gap: 10, marginTop: 15 }}>
-                <CustomButton text={'Add New Room'} Bg={'#3272ed'} img={'pluscircle'} fun={() => { }} />
-                <CustomButton text={'Add New Tenant'} Bg={'#089f6f'} img={Images.TENATES} fun={() => { }} />
-                <CustomButton text={'Record Rent Payment'} Bg={'#e68808'} img={'calendar-plus'} fun={() => { }} />
+              <View style={{gap: 10, marginTop: 15}}>
+                <CustomButton
+                  text={'Add New Room'}
+                  Bg={'#3272ed'}
+                  img={'pluscircle'}
+                  fun={() => {}}
+                />
+                <CustomButton
+                  text={'Add New Tenant'}
+                  Bg={'#089f6f'}
+                  img={Images.TENATES}
+                  fun={() => {}}
+                />
+                <CustomButton
+                  text={'Record Rent Payment'}
+                  Bg={'#e68808'}
+                  img={'calendar-plus'}
+                  fun={() => {}}
+                />
               </View>
             </Animated.View>
 
-            <Animated.View entering={FadeInUp.duration(500).delay(200)} style={styles.ActionMain}>
+            <Animated.View
+              entering={FadeInUp.duration(500).delay(200)}
+              style={styles.ActionMain}>
               <View style={styles.flex}>
-                <View style={[styles.verticalLine, { backgroundColor: 'red' }]} />
+                <View
+                  style={[styles.verticalLine, {backgroundColor: '#5149E6'}]}
+                />
                 <Text style={styles.HeadingText}>Rent Status</Text>
               </View>
-              <View style={[styles.flex, { marginTop: 10 }]}>
+              <View style={[styles.flex, {marginTop: 10}]}>
                 <Image
                   source={Images.VACANT}
                   tintColor={'red'}
-                  style={{ width: 22, height: 22 }}
+                  style={{width: 22, height: 22}}
                 />
                 <Text style={styles.LastTExt}>{`Overdue Rents (0)`}</Text>
               </View>
@@ -318,17 +352,26 @@ const HomeScreen = () => {
                 <Text style={styles.BoxText}>No overdue rents! 🎉</Text>
               </View>
 
-              <View style={[styles.flex, { marginTop: 40 }]}>
+              <View style={[styles.flex, {marginTop: 40}]}>
                 <Image
                   source={Images.PENDING}
-                  style={{ width: 22, height: 22 }}
+                  style={{width: 22, height: 22}}
                 />
-                <Text style={[styles.LastTExt, { color: 'orange' }]}>{`Upcoming Rent Dues (0)`}</Text>
+                <Text
+                  style={[
+                    styles.LastTExt,
+                    {color: 'orange'},
+                  ]}>{`Upcoming Rent Dues (0)`}</Text>
               </View>
-              <View style={[styles.Box, { backgroundColor: '#dbdbdb', borderColor: 'gray' }]}>
-                <Text style={[styles.BoxText, { color: 'gray', fontSize: 12 }]}>No upcoming rent dues in the next 30 days.</Text>
+              <View
+                style={[
+                  styles.Box,
+                  {backgroundColor: '#dbdbdb', borderColor: 'gray'},
+                ]}>
+                <Text style={[styles.BoxText, {color: 'gray', fontSize: 12}]}>
+                  No upcoming rent dues in the next 30 days.
+                </Text>
               </View>
-
             </Animated.View>
           </View>
         </View>
@@ -395,13 +438,13 @@ const styles = StyleSheet.create({
     fontSize: moderateScale(14),
     fontFamily: Fonts.POPPINS_SEMIBOLD,
     color: '#5386e6',
-    fontWeight: '700'
+    fontWeight: '700',
   },
   IconAndTitle: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 5,
-    marginTop: 10
+    marginTop: 10,
   },
   verticalLine: {
     width: 4,
@@ -413,17 +456,17 @@ const styles = StyleSheet.create({
     padding: 15,
     backgroundColor: '#121826',
     borderRadius: 12,
-    marginBottom: 30
+    marginBottom: 30,
   },
   flex: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10
+    gap: 10,
   },
   HeadingText: {
     fontSize: 18,
     color: '#ffffff',
-    fontWeight: '500'
+    fontWeight: '500',
   },
   LastTExt: {
     color: 'red',
@@ -437,12 +480,11 @@ const styles = StyleSheet.create({
     borderRadius: 7,
     borderColor: 'green',
     marginTop: 20,
-    backgroundColor: '#f0fdf4'
+    backgroundColor: '#f0fdf4',
   },
   BoxText: {
     textAlign: 'center',
     color: 'green',
     fontWeight: '500',
-
-  }
+  },
 });
