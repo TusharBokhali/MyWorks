@@ -33,13 +33,16 @@ import Animated, {
 import CustomButton from '../component/CustomButton';
 import Header from '../component/Header';
 import DrawerView from '../navigation/DrawerNavigator';
+import RoomsScreen from './RoomsScreen';
+import TenantsScreen from './TenantScreen';
+import RentManagement from './RentManagement';
 const HomeScreen = () => {
   // const translateX = useSharedValue(0);
   const translateX = useSharedValue(-Dimensions.get('window').width * 0.8); // start hidden
 
   const AnimatedCard = Animated.createAnimatedComponent(TouchableOpacity);
   const [MyWidth, setMyWidth] = useState(Dimensions.get('window').width);
-
+    const [currentscreen, setCurrentScreen] = useState('Dashboard');
   const Data = [
     {
       id: 1,
@@ -97,9 +100,6 @@ const HomeScreen = () => {
   const DrawerHandle = () => {
     const isOpen = translateX.value === 0;
     translateX.value = withTiming(isOpen ? -MyWidth * 0.8 : 0, {duration: 500});
-    // translateX.value = !(translateX.value == 0)
-    //   ? withTiming(0, {duration: 500})
-    //   : withTiming(-(MyWidth * 0.8), {duration: 500});
   };
 
   return (
@@ -112,7 +112,9 @@ const HomeScreen = () => {
         showsVerticalScrollIndicator={false}>
         <View style={styles.container}>
           <Header functions={() => DrawerHandle()} />
-          <View style={styles.SectionMainView}>
+          {
+            currentscreen == 'Dashboard' ?
+            <View style={styles.SectionMainView}>
             <Animated.View
               entering={FadeInUp.duration(500).delay(200)}
               style={{
@@ -343,9 +345,22 @@ const HomeScreen = () => {
               </View>
             </Animated.View>
           </View>
+          : 
+          currentscreen == 'Rooms' ?
+                  <RoomsScreen />
+          : currentscreen == 'Tenants' ? 
+                  <TenantsScreen />
+          : currentscreen == 'Rent Management' && 
+          <RentManagement />
+          }
         </View>
       </ScrollView>
-      <DrawerView translateX={translateX} />
+      <DrawerView 
+      translateX={translateX}
+      currentscreen={currentscreen}
+      setCurrentScreen={setCurrentScreen}
+
+      />
     </SafeAreaView>
   );
 };

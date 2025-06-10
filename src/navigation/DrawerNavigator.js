@@ -1,21 +1,26 @@
 import { View, Text, StyleSheet, TouchableOpacity, Dimensions, Image } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Animated, { FadeInLeft, FadeInRight, FadeInUp, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
-import { moderateScale } from '../utils/Metrics';
-import { Fonts } from '../utils/Theme';
+import { moderateScale, screenHeight } from '../utils/Metrics';
+import { Colors, Fonts } from '../utils/Theme';
 import { Images } from '../assets/image/image';
 import LinearGradient from 'react-native-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { useNavigation } from '@react-navigation/native';
 
-
-
-
-export default function DrawerView({ translateX }) {
+export default function DrawerView({
+    translateX,
+    currentscreen,
+    setCurrentScreen
+}) {
     const AnimatedCard = Animated.createAnimatedComponent(TouchableOpacity);
     const [MyWidth, setMyWidth] = useState(Dimensions.get('window').width);
-
+    const translateY = useSharedValue(0);
     const isOpen = translateX.value === 0
+    const { navigate } = useNavigation();
+    const AnimatedLinear = Animated.createAnimatedComponent(LinearGradient)
 
     const draweropenstyle = useAnimatedStyle(() => {
         return {
@@ -25,7 +30,37 @@ export default function DrawerView({ translateX }) {
         }
     }, [])
 
+    const navigateAnimation = useAnimatedStyle(() => {
+        return {
+            transform: [{
+                translateY: translateY.value
+            }]
+        }
+    }, [])
 
+    useEffect(() => {
+        const NavigateAnimation = () => {
+            translateY.value =
+                currentscreen === 'Dashboard'
+                    ? withTiming(hp('20.5%'), { duration: 300 })
+                    : currentscreen === 'Rooms'
+                        ? withTiming(hp('30.5%'), { duration: 300 })
+                        : currentscreen === 'Tenants'
+                            ? withTiming(hp('40%'), { duration: 300 })
+                            : currentscreen === 'Rent Management'
+                                ? withTiming(hp('50%'), { duration: 300 })
+                                : withTiming(hp('20.5%'), { duration: 300 });
+
+            // navigate(currentscreen);
+            translateX.value = withTiming(isOpen ? -MyWidth * 0.8 : 0, { duration: 500 })
+        };
+        NavigateAnimation();
+    }, [currentscreen])
+
+
+    const NavigationNextScreen = (screen) => {
+        setCurrentScreen(screen);
+    }
     return (
         < >
 
@@ -62,6 +97,8 @@ export default function DrawerView({ translateX }) {
                         </TouchableOpacity>
                     </AnimatedCard>
                 </View>
+
+
                 <AnimatedCard
                     entering={FadeInLeft.duration(500).delay(200)}
                     style={styles.HederCenterStyle} >
@@ -80,32 +117,40 @@ export default function DrawerView({ translateX }) {
                     </View>
                 </AnimatedCard>
 
-                <AnimatedCard
-                    entering={FadeInLeft.duration(500).delay(200)}
-                    style={styles.SelectedStyle}
-                > <View
-                    style={{
-                        width: moderateScale(40),
-                        height: moderateScale(40),
-                        backgroundColor: 'rgba(255, 255, 255, 0.2)',
-                        borderRadius: moderateScale(12),
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        marginRight: moderateScale(10),
-                    }}
+                <AnimatedLinear
+                    colors={['#6366f1cc', '#4f46e5cc']}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 0.5, y: 0 }}
+                    style={[{
+                        width: '90%',
+                        height: '10%',
+                        alignSelf: 'center',
+                        borderRadius: 12,
+                        position: 'absolute',
+                        zIndex: -2,
+                    }, navigateAnimation]}
                 >
-                        <Image
-                            style={{
-                                width: moderateScale(26),
-                                height: moderateScale(26),
-                                tintColor: '#fff'
-                            }}
-                            source={Images.USER}
-                        />
-                    </View>
+                    <View style={styles.LightWidth} />
+                </AnimatedLinear>
+                <AnimatedCard
+                    onPress={() => NavigationNextScreen('Dashboard')}
+                    entering={FadeInLeft.duration(500).delay(200)}
+                    style={[styles.SelectedStyle,]}
+                >
+                    <Image
+                        style={{
+                            width: moderateScale(40),
+                            height: moderateScale(40),
+                            tintColor: '#fff'
+                        }}
+                        source={Images.USER}
+                    />
+
                     <Text style={[styles.HeaderText]}>Dashbord</Text>
                 </AnimatedCard>
+
                 <AnimatedCard
+                    onPress={() => NavigationNextScreen('Rooms')}
                     entering={FadeInLeft.duration(500).delay(200)}
                     style={styles.SelectedStyle}
                 >
@@ -131,7 +176,9 @@ export default function DrawerView({ translateX }) {
                     </View>
                     <Text style={[styles.HeaderText]}>Rooms</Text>
                 </AnimatedCard>
+
                 <AnimatedCard
+                    onPress={() => NavigationNextScreen('Tenants')}
                     entering={FadeInLeft.duration(500).delay(200)}
                     style={styles.SelectedStyle}
                 >
@@ -155,7 +202,9 @@ export default function DrawerView({ translateX }) {
                         /></View>
                     <Text style={[styles.HeaderText]}>Tenants</Text>
                 </AnimatedCard>
+
                 <AnimatedCard
+                    onPress={() => NavigationNextScreen('Rent Management')}
                     entering={FadeInLeft.duration(500).delay(200)}
                     style={styles.SelectedStyle}
                 >
@@ -182,7 +231,7 @@ export default function DrawerView({ translateX }) {
                 </AnimatedCard>
 
 
-                <AnimatedCard entering={FadeInLeft.duration(500).delay(200)}>
+                {/* <AnimatedCard entering={FadeInLeft.duration(500).delay(200)}>
                     <LinearGradient
                         colors={['#5A53D4', '#6A5AE0']}
                         start={{ x: 0, y: 1 }}
@@ -216,7 +265,7 @@ export default function DrawerView({ translateX }) {
                             RENT MANAGEMENT
                         </Text>
                     </LinearGradient>
-                </AnimatedCard>
+                </AnimatedCard> */}
 
 
             </Animated.View >
@@ -249,21 +298,26 @@ const styles = StyleSheet.create({
         paddingTop: 10
     },
     HederCenterStyle: {
+        width: "90%",
+        height: 60,
+        paddingLeft: 20,
         flexDirection: 'row',
         alignItems: 'center',
         gap: moderateScale(6),
-        padding: moderateScale(16),
+        padding: moderateScale(2),
         backgroundColor: 'rgba(255, 255, 255, 0.02)',
-        marginHorizontal: moderateScale(20),
+        alignSelf: 'center',
         marginVertical: moderateScale(10),
         borderRadius: moderateScale(16),
-        shadowOffset: {
-            width: 0,
-            height: 3,
-        },
-        shadowOpacity: 0.17,
-        shadowRadius: 6.27,
-        elevation: 1,
+        borderWidth: 1,
+        borderColor: '#ffffff0d'
+        // shadowOffset: {
+        //     width: 0,
+        //     height: 0,
+        // },
+        // shadowOpacity: 0.17,
+        // shadowRadius:1.27,
+        // elevation: 1,
     },
     HeaderText: {
         fontSize: moderateScale(18),
@@ -281,13 +335,18 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         gap: moderateScale(6),
-        padding: moderateScale(12),
-        backgroundColor: 'rgba(255, 255, 255, 0.1)',
+        padding: moderateScale(10),
+        // backgroundColor: 'rgba(255, 255, 255, 0.1)',
         marginHorizontal: moderateScale(20),
         marginVertical: moderateScale(10),
         borderRadius: moderateScale(16),
         opacity: moderateScale(0.3)
     },
+    LightWidth: {
+        width: 2,
+        // height:'100%',
+        backgroundColor: Colors.WHITE
+    }
 })
 
 

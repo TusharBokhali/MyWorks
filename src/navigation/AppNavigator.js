@@ -5,6 +5,9 @@ import HomeScreen from '../screen/HomeScreen';
 import { Colors } from '../utils/Theme';
 import SplashScreen from '../screen/SplashScreen';
 import DrawerNavigator from './DrawerNavigator';
+import RoomsScreen from '../screen/RoomsScreen';
+import RentManagement from '../screen/RentManagement';
+import Tenants from '../screen/TenantScreen';
 
 
 export default function AppNavigator() {
@@ -17,9 +20,10 @@ export default function AppNavigator() {
             <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName='SplashScreen'>
                 <Stack.Screen name='HomeScreen' component={HomeScreen} />
                 <Stack.Screen name='SplashScreen' component={SplashScreen} />
-
-
                 <Stack.Screen name='DrawerNavigator' component={DrawerNavigator} />
+                <Stack.Screen name='Rooms' component={RoomsScreen} />
+                <Stack.Screen name='Rent Management' component={RentManagement} />
+                <Stack.Screen name='Tenants' component={Tenants} />
             </Stack.Navigator>
         </>
     )

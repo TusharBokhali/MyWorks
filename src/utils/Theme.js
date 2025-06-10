@@ -16,11 +16,13 @@ export const Colors = {
     GRAY86: "#868686", //use in disable
     GRAYF3: "#F3F3F3",
     DANGER: "#FF1D1D",
-    BACKDROP: "rgba(0, 0, 0, 0.6)",
-    BLUE: " #1D85FF",
+    BACKDROP: "(rgba(0, 0, 0, 0.6)",
+    // BLUE: " #1D85FF",
     LIGHT_BLUE: "#EDF5FF",
     SUCCESS: "#5BAA00",
+    BLUE: "#1D85FF",
 
+    DARKBLUE:'#121826',
 
     CHARCOLEBLUE: "#252a46",
     GUNMETAL: "#383a42",
