@@ -28,12 +28,14 @@ import Animated, {
   FadeInRight,
   FadeInUp,
   useSharedValue,
+  withTiming,
 } from 'react-native-reanimated';
 import CustomButton from '../component/CustomButton';
 import Header from '../component/Header';
 import DrawerView from '../navigation/DrawerNavigator';
 const HomeScreen = () => {
-  const translateX = useSharedValue(0);
+  // const translateX = useSharedValue(0);
+  const translateX = useSharedValue(-Dimensions.get('window').width * 0.8); // start hidden
 
   const AnimatedCard = Animated.createAnimatedComponent(TouchableOpacity);
   const [MyWidth, setMyWidth] = useState(Dimensions.get('window').width);
@@ -93,9 +95,11 @@ const HomeScreen = () => {
   }, []);
 
   const DrawerHandle = () => {
-    translateX.value = !(translateX.value == 0)
-      ? withTiming(0, {duration: 500})
-      : withTiming(-(MyWidth * 0.8), {duration: 500});
+    const isOpen = translateX.value === 0;
+    translateX.value = withTiming(isOpen ? -MyWidth * 0.8 : 0, {duration: 500});
+    // translateX.value = !(translateX.value == 0)
+    //   ? withTiming(0, {duration: 500})
+    //   : withTiming(-(MyWidth * 0.8), {duration: 500});
   };
 
   return (

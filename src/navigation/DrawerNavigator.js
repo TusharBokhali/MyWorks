@@ -5,13 +5,18 @@ import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 import { moderateScale } from '../utils/Metrics';
 import { Fonts } from '../utils/Theme';
 import { Images } from '../assets/image/image';
-const { width, height } = Dimensions.get('window');
+import LinearGradient from 'react-native-linear-gradient';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
+
 
 
 export default function DrawerView({ translateX }) {
-    // const translateX = useSharedValue(0);
-    const [isSelected, setIsSelected] = useState(null);
     const AnimatedCard = Animated.createAnimatedComponent(TouchableOpacity);
+    const [MyWidth, setMyWidth] = useState(Dimensions.get('window').width);
+
+    const isOpen = translateX.value === 0
+
     const draweropenstyle = useAnimatedStyle(() => {
         return {
             transform: [{
@@ -22,36 +27,48 @@ export default function DrawerView({ translateX }) {
 
 
     return (
-        <>
+        < >
 
             <Animated.View style={[styles.container, draweropenstyle]}>
-                <AnimatedCard
-                    entering={FadeInLeft.duration(500).delay(200)}
-                    style={styles.HederCenterStyle}>
-                    <Image
-                        style={{
-                            width: moderateScale(42),
-                            height: moderateScale(42),
-                            // backgroundColor: '#FFF',
-                            borderRadius: moderateScale(8),
-                        }}
-                        source={Images.SplashScreen}
-                    />
-                    <View>
-                        <Text style={styles.HeaderText}>Sebzy</Text>
-                        <Text style={styles.HeaderTextSmall}>PG Management</Text>
-                    </View>
-                </AnimatedCard>
-
-                <AnimatedCard
-                    entering={FadeInLeft.duration(500).delay(200)}
-                    style={styles.HederCenterStyle}
-                    onPress={() => setIsSelected(true)}
+                <View
                 >
+                    <AnimatedCard
+                        entering={FadeInLeft.duration(500).delay(200)}
+                        style={styles.HederCenterStyle}
+                    >
+                        <Image
+                            style={{
+                                width: moderateScale(42),
+                                height: moderateScale(42),
+                                borderRadius: moderateScale(8),
+                            }}
+                            source={Images.SplashScreen}
+                        />
+                        <View>
+                            <Text style={styles.HeaderText}>Sebzy</Text>
+                            <Text style={styles.HeaderTextSmall}>PG Management</Text>
+                        </View>
+                        <TouchableOpacity style={{ marginLeft: moderateScale(40), }} onPress={
+
+                            () => translateX.value = withTiming(isOpen ? -MyWidth * 0.8 : 0, { duration: 500 })}>
+                            <Image
+                                style={{
+                                    width: moderateScale(24),
+                                    height: moderateScale(24),
+                                    tintColor: '#fff',
+                                }}
+                                source={Images.close}
+                            />
+                        </TouchableOpacity>
+                    </AnimatedCard>
+                </View>
+                <AnimatedCard
+                    entering={FadeInLeft.duration(500).delay(200)}
+                    style={styles.HederCenterStyle} >
                     <Image
                         style={{
-                            width: moderateScale(34),
-                            height: moderateScale(34),
+                            width: moderateScale(36),
+                            height: moderateScale(36),
                             backgroundColor: '#FFF',
                             borderRadius: moderateScale(30),
                         }}
@@ -63,85 +80,146 @@ export default function DrawerView({ translateX }) {
                     </View>
                 </AnimatedCard>
 
-                <TouchableOpacity >
-                    <AnimatedCard
-                        entering={FadeInLeft.duration(500).delay(200)}
-                        style={styles.SelectedStyle}
-                    >
-
+                <AnimatedCard
+                    entering={FadeInLeft.duration(500).delay(200)}
+                    style={styles.SelectedStyle}
+                > <View
+                    style={{
+                        width: moderateScale(40),
+                        height: moderateScale(40),
+                        backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                        borderRadius: moderateScale(12),
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        marginRight: moderateScale(10),
+                    }}
+                >
                         <Image
                             style={{
-                                width: moderateScale(34),
-                                height: moderateScale(34),
-                                backgroundColor: 'rgba(255, 255, 255, 0.3)',
-                                borderRadius: moderateScale(8),
+                                width: moderateScale(26),
+                                height: moderateScale(26),
+                                tintColor: '#fff'
                             }}
                             source={Images.USER}
                         />
-                        <Text style={[styles.HeaderText]}>Dashbord</Text>
-                    </AnimatedCard>
-                </TouchableOpacity>
-
-                <TouchableOpacity >
-                    <AnimatedCard
-                        entering={FadeInLeft.duration(500).delay(200)}
-                        style={styles.SelectedStyle}
+                    </View>
+                    <Text style={[styles.HeaderText]}>Dashbord</Text>
+                </AnimatedCard>
+                <AnimatedCard
+                    entering={FadeInLeft.duration(500).delay(200)}
+                    style={styles.SelectedStyle}
+                >
+                    <View
+                        style={{
+                            width: moderateScale(40),
+                            height: moderateScale(40),
+                            backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                            borderRadius: moderateScale(12),
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            marginRight: moderateScale(10),
+                        }}
                     >
                         <Image
                             style={{
-                                width: moderateScale(32),
-                                height: moderateScale(32),
-                                padding: moderateScale(12),
-                                backgroundColor: 'rgba(255, 255, 255, 0.2)',
-                                borderRadius: moderateScale(8),
+                                width: moderateScale(26),
+                                height: moderateScale(26),
+                                tintColor: '#fff'
                             }}
                             source={Images.ROOMTOTAL}
                         />
-                        <Text style={[styles.HeaderText]}>Rooms</Text>
-                    </AnimatedCard>
-                </TouchableOpacity>
-
-                <TouchableOpacity>
-
-                    <AnimatedCard
-                        entering={FadeInLeft.duration(500).delay(200)}
-                        style={styles.SelectedStyle}
+                    </View>
+                    <Text style={[styles.HeaderText]}>Rooms</Text>
+                </AnimatedCard>
+                <AnimatedCard
+                    entering={FadeInLeft.duration(500).delay(200)}
+                    style={styles.SelectedStyle}
+                >
+                    <View
+                        style={{
+                            width: moderateScale(40),
+                            height: moderateScale(40),
+                            backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                            borderRadius: moderateScale(12),
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            marginRight: moderateScale(10),
+                        }}
                     >
                         <Image
                             style={{
-                                width: moderateScale(34),
-                                height: moderateScale(34),
-                                padding: moderateScale(16),
-                                backgroundColor: 'rgba(255, 255, 255, 0.3)',
-                                borderRadius: moderateScale(8),
+                                width: moderateScale(26),
+                                height: moderateScale(26),
                             }}
                             source={Images.TENATES}
-                        />
-                        <Text style={[styles.HeaderText]}>Tenants</Text>
-                    </AnimatedCard>
-                </TouchableOpacity>
-
-                <TouchableOpacity>
-                    <AnimatedCard
-                        entering={FadeInLeft.duration(500).delay(200)}
-                        style={styles.SelectedStyle}
+                        /></View>
+                    <Text style={[styles.HeaderText]}>Tenants</Text>
+                </AnimatedCard>
+                <AnimatedCard
+                    entering={FadeInLeft.duration(500).delay(200)}
+                    style={styles.SelectedStyle}
+                >
+                    <View
+                        style={{
+                            width: moderateScale(40),
+                            height: moderateScale(40),
+                            backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                            borderRadius: moderateScale(12),
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            marginRight: moderateScale(10),
+                        }}
                     >
                         <Image
                             style={{
-                                width: moderateScale(34),
-                                height: moderateScale(34),
-                                backgroundColor: 'rgba(255, 255, 255, 0.3)',
-                                borderRadius: moderateScale(8),
+                                width: moderateScale(26),
+                                height: moderateScale(26),
+                                tintColor: '#fff'
                             }}
                             source={Images.RENT}
-                        />
-                        <Text style={[styles.HeaderText]}>Rent Management</Text>
-                    </AnimatedCard>
-                </TouchableOpacity>
+                        /></View>
+                    <Text style={[styles.HeaderText]}>Rent Management</Text>
+                </AnimatedCard>
 
 
+                <AnimatedCard entering={FadeInLeft.duration(500).delay(200)}>
+                    <LinearGradient
+                        colors={['#5A53D4', '#6A5AE0']}
+                        start={{ x: 0, y: 1 }}
+                        end={{ x: 1, y: 0 }}
+                        style={[
+                            styles.SelectedStyle,
+                            { flexDirection: 'row', alignItems: 'center', padding: moderateScale(10), borderRadius: moderateScale(12) },
+                        ]}
+                    >
+                        <View
+                            style={{
+                                width: moderateScale(40),
+                                height: moderateScale(40),
+                                backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                                borderRadius: moderateScale(12),
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                marginRight: moderateScale(10),
+                            }}
+                        >
+                            <Image
+                                source={Images.RENT}
+                                style={{
+                                    width: moderateScale(26),
+                                    height: moderateScale(26),
+                                    tintColor: 'white',
+                                }}
+                            />
+                        </View>
+                        <Text style={[styles.text, { color: 'white', fontWeight: '600' }]}>
+                            RENT MANAGEMENT
+                        </Text>
+                    </LinearGradient>
+                </AnimatedCard>
 
-            </Animated.View>
+
+            </Animated.View >
         </>
     )
 }
@@ -155,6 +233,12 @@ const styles = StyleSheet.create({
         position: 'absolute',
         bottom: 0,
         zIndex: 500,
+    },
+    gradientBackground: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        padding: 16,
+        borderRadius: 12,
     },
     header: {
         width: '100%',
@@ -242,6 +326,6 @@ const styles = StyleSheet.create({
 
 {/* <View style={styles.header}>
         <TouchableOpacity onPress={DrawerHandle}>
-            <SimpleLineIcons name='menu' size={24} color={'white'}/>
+            <SimpleLineIcons name='menu' size={26} color={'white'}/>
         </TouchableOpacity>
     </View> */}

@@ -24,6 +24,7 @@ const Header = ({functions}) => {
   const AnimatedCard = Animated.createAnimatedComponent(TouchableOpacity);
   const [MyWidth, setMyWidth] = useState(Dimensions.get('window').width);
 
+  const [isSelected, setIsSelected] = useState(false);
   return (
     <View>
       <View style={styles.HeaderMainView}>
@@ -47,7 +48,6 @@ const Header = ({functions}) => {
             style={{
               width: moderateScale(32),
               height: moderateScale(32),
-              backgroundColor: '#FFF',
               borderRadius: moderateScale(8),
             }}
             source={Images.SplashScreen}
@@ -66,7 +66,8 @@ const Header = ({functions}) => {
             flexDirection: 'row',
             justifyContent: 'center',
             alignItems: 'center',
-          }}>
+          }}
+          onPress={() => setIsSelected(prev => !prev)}>
           <Image
             style={{
               width: moderateScale(32),
@@ -82,6 +83,21 @@ const Header = ({functions}) => {
           </View>
         </AnimatedCard>
       </View>
+      {/* 
+      {isSelected ? (
+        <Animated.View entering={FadeInRight.duration(500).delay(200)}>
+          <View
+            style={{
+              zIndex: 5,
+              width: moderateScale(50),
+              height: moderateScale(150),
+            }}>
+            <Text>DEmo</Text>
+          </View>
+        </Animated.View>
+      ) : (
+        <View></View>
+      )} */}
     </View>
   );
 };
