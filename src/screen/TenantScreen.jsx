@@ -139,7 +139,7 @@ const TenantScreen = () => {
             text={'+ Add Tenants'}
             Bg={Colors.BLUE}
             // Bg={'rgba(165, 180, 252, 0.5)'}
-            fun={() => { }}
+            fun={() => {}}
           />
         </View>
       </AnimatedCard>

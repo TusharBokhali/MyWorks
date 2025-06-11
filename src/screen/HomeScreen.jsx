@@ -34,7 +34,7 @@ import CustomButton from '../component/CustomButton';
 import Header from '../component/Header';
 import DrawerView from '../navigation/DrawerNavigator';
 import RoomsScreen from './RoomsScreen';
-import TenantsScreen from './TenantScreen';
+import TenantScreen from '../screen/TenantScreen';
 import RentManagement from './RentManagement';
 import { useNavigation } from '@react-navigation/native';
 const HomeScreen = () => {
@@ -66,7 +66,7 @@ const HomeScreen = () => {
       button: 'View all tenants',
       img: Images.TENATES,
       color: '#41bf95',
-      onPress: () => navigate('TenantScreen'),
+      onPress: () => navigation.navigate('TenantScreen'),
     },
     {
       id: 3,
@@ -91,7 +91,6 @@ const HomeScreen = () => {
       onPress: () => navigate('Rent Management'),
     },
   ];
-
   useEffect(() => {
     const onChange = ({ window }) => {
       setMyWidth(window.width);
@@ -366,7 +365,6 @@ const HomeScreen = () => {
         translateX={translateX}
         currentscreen={currentscreen}
         setCurrentScreen={setCurrentScreen}
-
       />
     </SafeAreaView>
   );

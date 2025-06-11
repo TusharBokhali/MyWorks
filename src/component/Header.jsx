@@ -26,7 +26,7 @@ const Header = ({functions}) => {
 
   const [isSelected, setIsSelected] = useState(false);
   return (
-    <View>
+    <View style={{position: 'static', top: 0, zIndex: 20}}>
       <View style={styles.HeaderMainView}>
         <TouchableOpacity
           style={{

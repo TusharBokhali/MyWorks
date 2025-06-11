@@ -1,10 +1,10 @@
 export const Colors = {
-    WHITE: '  #FFFFFF',
+    WHITE: '#FFFFFF',
     PRIMARY_COLOR: '#FFCB20',
     PRIMARY_GRADIENT: ['#FFDB66', '#E9B819'],
-    PRIMARY_COLOR_LIGHT: ' #FDF7E4',
+    PRIMARY_COLOR_LIGHT: '#FDF7E4',
     SECONDARY_COLOR: '#000000',
-    GRAY: ' #A0A0A0',
+    GRAY: '#A0A0A0',
     GRAY72: "#B8B8B8",
     GRAYD0: "#D0D0D0",
     GRAY7C: "#7C8085",
@@ -22,7 +22,7 @@ export const Colors = {
     SUCCESS: "#5BAA00",
     BLUE: "#1D85FF",
 
-    DARKBLUE:'#121826',
+    DARKBLUE: '#121826',
 
     CHARCOLEBLUE: "#252a46",
     GUNMETAL: "#383a42",
