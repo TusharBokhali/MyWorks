@@ -6,24 +6,43 @@ import {
   TouchableOpacity,
   TextInput,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Animated, {FadeInLeft, FadeInUp} from 'react-native-reanimated';
-import {moderateScale, screenHeight} from '../utils/Metrics';
+import {moderateScale, screenHeight, screenWidth} from '../utils/Metrics';
 import {Colors, Fonts} from '../utils/Theme';
 import CustomButton from '../component/CustomButton';
 import {Dropdown} from 'react-native-element-dropdown';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const TenantScreen = () => {
   const AnimatedCard = Animated.createAnimatedComponent(TouchableOpacity);
   const [MyWidth, setMyWidth] = useState(Dimensions.get('window').width);
   const [value, setValue] = useState(null);
+  const [text, setText] = useState(null);
 
   const data = [
-    {label: 'Option 1', value: '1'},
-    {label: 'Option 2', value: '2'},
-    {label: 'Option 3', value: '3'},
+    {label: 'All Tenants', value: '1'},
+    {label: 'Active', value: '2'},
+    {label: 'Inactive', value: '3'},
   ];
+
+  const loadSelectedValue = async () => {
+    const savedValue = await AsyncStorage.getItem('tenantStatus');
+    if (savedValue) {
+      setValue(savedValue);
+    }
+  };
+
+  const handleDropdownChange = async item => {
+    setValue(item.value);
+    await AsyncStorage.setItem('tenantStatus', item.value);
+  };
+
+  useEffect(() => {
+    loadSelectedValue();
+  }, []);
+
   return (
     <SafeAreaView style={styles.container}>
       <AnimatedCard
@@ -55,16 +74,20 @@ const TenantScreen = () => {
             }}
             placeholderTextColor={Colors.DARKBLUE}
             placeholder="Search by name, email or phone"
+            value={text}
+            onChangeText={value => setText(value)}
           />
           <View
             style={{
               flexDirection: 'row',
-              margin: moderateScale(10),
               alignItems: 'center',
+              margin: moderateScale(20),
+              marginLeft: 0,
             }}>
             <Text
               style={{
                 fontSize: moderateScale(16),
+                fontWeight: 800,
                 color: Colors.WHITE,
                 margin: moderateScale(10),
                 marginLeft: 0,
@@ -76,17 +99,30 @@ const TenantScreen = () => {
               labelField="label"
               valueField="value"
               value={value}
-              onChange={item => setValue(item.value)}
+              onChange={handleDropdownChange}
               placeholder="Select option"
-              placeholderTextColor="red"
+              placeholderStyle={{
+                color: '#fff',
+              }}
               style={{
-                color: '#FFF',
+                width: screenWidth * 0.62,
                 borderWidth: 1,
-                borderRadius: moderateScale(7),
-                borderColor: Colors.WHITE,
-                padding: moderateScale(10),
-                width: moderateScale(200),
-                // height: screenHeight * 0.06,
+                borderRadius: moderateScale(8),
+                borderColor: '#6baced',
+                padding: moderateScale(8),
+              }}
+              selectedTextStyle={{
+                color: '#fff',
+                fontSize: moderateScale(18),
+                fontWeight: 600,
+                borderRadius: moderateScale(8),
+              }}
+              containerStyle={{
+                fontSize: moderateScale(22),
+                borderRadius: moderateScale(8),
+                backgroundColor: '#fff',
+                borderWidth: 1,
+                borderColor: 'gray',
               }}
             />
           </View>
@@ -135,7 +171,7 @@ const styles = StyleSheet.create({
       height: 3,
     },
     shadowColor: Colors.WHITE,
-    shadowOpacity: 1,
+    shadowOpacity: 0.6,
     shadowRadius: 6.27,
     elevation: 1,
   },
