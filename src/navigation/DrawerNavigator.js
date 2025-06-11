@@ -21,7 +21,7 @@ export default function DrawerView({
     const isOpen = translateX.value === 0
     const { navigate } = useNavigation();
     const AnimatedLinear = Animated.createAnimatedComponent(LinearGradient)
-
+    const [Toogle, setToggle] = useState(0);
     const draweropenstyle = useAnimatedStyle(() => {
         return {
             transform: [{
@@ -42,17 +42,21 @@ export default function DrawerView({
         const NavigateAnimation = () => {
             translateY.value =
                 currentscreen === 'Dashboard'
-                    ? withTiming(hp('20.5%'), { duration: 300 })
+                    ? withTiming(hp('19%'), { duration: 300 })
                     : currentscreen === 'Rooms'
-                        ? withTiming(hp('30.5%'), { duration: 300 })
+                        ? withTiming(hp('28.3%'), { duration: 300 })
                         : currentscreen === 'Tenants'
-                            ? withTiming(hp('40%'), { duration: 300 })
+                            ? withTiming(hp('37.5%'), { duration: 300 })
                             : currentscreen === 'Rent Management'
-                                ? withTiming(hp('50%'), { duration: 300 })
+                                ? withTiming(hp('47%'), { duration: 300 })
                                 : withTiming(hp('20.5%'), { duration: 300 });
 
             // navigate(currentscreen);
-            translateX.value = withTiming(isOpen ? -MyWidth * 0.8 : 0, { duration: 500 })
+            
+            Toogle >0 && (
+                 translateX.value = withTiming(isOpen ? -MyWidth * 0.8 : 0, { duration: 500 })
+            )
+            setToggle(pre => pre + 1);
         };
         NavigateAnimation();
     }, [currentscreen])
@@ -276,7 +280,7 @@ export default function DrawerView({
 const styles = StyleSheet.create({
     container: {
         width: '80%',
-        height: '90.8%',
+        height: '94%',
         // backgroundColor: 'blue',
         backgroundColor: '#272C48',
         position: 'absolute',

@@ -4,32 +4,130 @@ import {
   Text,
   View,
   TouchableOpacity,
+  TextInput,
 } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import Animated, { FadeInUp } from 'react-native-reanimated';
-import { moderateScale, screenHeight } from '../utils/Metrics';
+import Animated, { FadeInLeft, FadeInUp } from 'react-native-reanimated';
+import { moderateScale, screenHeight, screenWidth } from '../utils/Metrics';
 import { Colors, Fonts } from '../utils/Theme';
 import CustomButton from '../component/CustomButton';
+import { Dropdown } from 'react-native-element-dropdown';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const TenantsScreen = () => {
+const TenantScreen = () => {
   const AnimatedCard = Animated.createAnimatedComponent(TouchableOpacity);
   const [MyWidth, setMyWidth] = useState(Dimensions.get('window').width);
+  const [value, setValue] = useState(null);
+  const [text, setText] = useState('');
+
+  const data = [
+    { label: 'All Tenants', value: '1' },
+    { label: 'Active', value: '2' },
+    { label: 'Inactive', value: '3' },
+  ];
+
+  const loadSelectedValue = async () => {
+    const savedValue = await AsyncStorage.getItem('tenantStatus');
+    if (savedValue) {
+      setValue(savedValue);
+    }
+  };
+
+  const handleDropdownChange = async item => {
+    setValue(item.value);
+    await AsyncStorage.setItem('tenantStatus', item.value);
+  };
+
+  useEffect(() => {
+    loadSelectedValue();
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={{ marginLeft: moderateScale(10) }}>
-        <Text style={[styles.HeaderText, { fontSize: moderateScale(22) }]}>
+      <AnimatedCard
+        entering={FadeInLeft.duration(500).delay(200)}
+        style={{ margin: moderateScale(20) }}>
+        <Text
+          style={[
+            styles.HeaderText,
+            {
+              fontSize: moderateScale(22),
+              fontWeight: 800,
+              fontFamily: Fonts.POPPINS_BOLD,
+            },
+          ]}>
           Tenants
         </Text>
-      </View>
-      <AnimatedCard
-        style={[styles.BoxMain, { position: 'absolute', top: screenHeight / 4 }]}>
-        <Text>Hello</Text>
-        <Text>Hello</Text>
-        <Text>Hello</Text>
-        <Text>Hello</Text>
       </AnimatedCard>
+      <View
+        entering={FadeInUp.duration(500).delay(200)}
+        style={[styles.BoxMain, { position: 'absolute', top: screenHeight / 4 }]}>
+        <View>
+          <TextInput
+            style={{
+              paddingHorizontal: moderateScale(8),
+              borderRadius: moderateScale(7),
+              backgroundColor: '#6baced',
+              color: Colors.DARKBLUE,
+              fontSize: 16,
+            }}
+            placeholderTextColor={Colors.DARKBLUE}
+            placeholder="Search by name, email or phone"
+            value={text}
+            onChangeText={setText}
+          />
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              margin: moderateScale(20),
+              marginLeft: 0,
+            }}>
+            <Text
+              style={{
+                fontSize: moderateScale(16),
+                fontWeight: 800,
+                color: Colors.WHITE,
+                margin: moderateScale(10),
+                marginLeft: 0,
+              }}>
+              Staus :
+            </Text>
+            <Dropdown
+              data={data}
+              labelField="label"
+              valueField="value"
+              value={value}
+              onChange={handleDropdownChange}
+              placeholder="Select option"
+              placeholderStyle={{
+                color: '#fff',
+              }}
+              style={{
+                width: screenWidth * 0.62,
+                borderWidth: 1,
+                borderRadius: moderateScale(8),
+                borderColor: '#6baced',
+                padding: moderateScale(8),
+              }}
+              selectedTextStyle={{
+                color: '#fff',
+                fontSize: moderateScale(18),
+                fontWeight: 600,
+                borderRadius: moderateScale(8),
+              }}
+              containerStyle={{
+                fontSize: moderateScale(22),
+                borderRadius: moderateScale(8),
+                backgroundColor: '#fff',
+                borderWidth: 1,
+                borderColor: 'gray',
+              }}
+            />
+          </View>
+        </View>
+      </View>
       <AnimatedCard
         entering={FadeInUp.duration(500).delay(200)}
         style={styles.BoxMain}>
@@ -49,16 +147,15 @@ const TenantsScreen = () => {
   );
 };
 
-export default TenantsScreen;
+export default TenantScreen;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    height: screenHeight * 2,
     backgroundColor: Colors.CHARCOLEBLUE,
   },
   BoxMain: {
     // flex: 1,
-    // width: screenWidth * 0.9,
     width: '90%',
     marginHorizontal: moderateScale(30),
     marginTop: moderateScale(10),
@@ -68,7 +165,15 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.DARKBLUE,
     alignSelf: 'center',
     position: 'absolute',
-    top: screenHeight / 2 - 20,
+    top: screenHeight / 2,
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowColor: Colors.WHITE,
+    shadowOpacity: 0.6,
+    shadowRadius: 6.27,
+    elevation: 1,
   },
   HeaderText: {
     fontFamily: Fonts.POPPINS_SEMIBOLD,

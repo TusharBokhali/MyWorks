@@ -23,7 +23,7 @@ export default function AppNavigator() {
                 <Stack.Screen name='DrawerNavigator' component={DrawerNavigator} />
                 <Stack.Screen name='Rooms' component={RoomsScreen} />
                 <Stack.Screen name='Rent Management' component={RentManagement} />
-                <Stack.Screen name='Tenants' component={Tenants} />
+                <Stack.Screen name='TenantScreen' component={Tenants} />
             </Stack.Navigator>
         </>
     )
