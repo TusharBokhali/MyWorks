@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Dimensions, Image } from 'rea
 import React, { useEffect, useState } from 'react'
 import Animated, { FadeInLeft, FadeInRight, FadeInUp, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
-import { moderateScale, screenHeight } from '../utils/Metrics';
+import { moderateScale, screenHeight, screenWidth } from '../utils/Metrics';
 import { Colors, Fonts } from '../utils/Theme';
 import { Images } from '../assets/image/image';
 import LinearGradient from 'react-native-linear-gradient';
@@ -40,24 +40,43 @@ export default function DrawerView({
 
     useEffect(() => {
         const NavigateAnimation = () => {
-            translateY.value =
-                currentscreen === 'Dashboard'
-                    ? withTiming(hp('19%'), { duration: 300 })
-                    : currentscreen === 'Rooms'
-                        ? withTiming(hp('28.3%'), { duration: 300 })
-                        : currentscreen === 'Tenants'
-                            ? withTiming(hp('37.5%'), { duration: 300 })
-                        ? withTiming(hp('30.5%'), { duration: 300 })
-                        : currentscreen === 'TenantScreen'
-                            ? withTiming(hp('40%'), { duration: 300 })
-                            : currentscreen === 'Rent Management'
-                                ? withTiming(hp('47%'), { duration: 300 })
-                                : withTiming(hp('20.5%'), { duration: 300 });
+            // translateY.value =
+            //     currentscreen === 'Dashboard'
+            //         ? withTiming(hp('19%'), { duration: 300 })
+            //         : currentscreen === 'Rooms'
+            //             ? withTiming(hp('28.3%'), { duration: 300 })
+            //             : currentscreen === 'Tenants'
+            //                 ? withTiming(hp('37.5%'), { duration: 300 })
+            //             ? withTiming(hp('30.5%'), { duration: 300 })
+            //             : currentscreen === 'TenantScreen'
+            //                 ? withTiming(hp('40%'), { duration: 300 })
+            //                 : currentscreen === 'Rent Management'
+            //                     ? withTiming(hp('47%'), { duration: 300 })
+            //                     : withTiming(hp('20.5%'), { duration: 300 })
 
+            switch (currentscreen) {
+                case 'Dashboard':
+                    translateY.value = withTiming(hp('19%'), { duration: 300 });
+                    break;
+                case 'Rooms':
+                    translateY.value = withTiming(hp('28.3%'), { duration: 300 });
+                    break;
+                case 'Tenants':
+                    translateY.value = withTiming(hp('37.5%'), { duration: 300 });
+                    break;
+                case 'TenantScreen':
+                    translateY.value = withTiming(hp('40%'), { duration: 300 });
+                    break;
+                case 'Rent Management':
+                    translateY.value = withTiming(hp('47%'), { duration: 300 });
+                    break;
+                default:
+                    translateY.value = withTiming(hp('20.5%'), { duration: 300 });
+            }
             // navigate(currentscreen);
-            
-            Toogle >0 && (
-                 translateX.value = withTiming(isOpen ? -MyWidth * 0.8 : 0, { duration: 500 })
+
+            Toogle > 0 && (
+                translateX.value = withTiming(isOpen ? -MyWidth * 0.8 : 0, { duration: 500 })
             )
             setToggle(pre => pre + 1);
         };
@@ -90,7 +109,7 @@ export default function DrawerView({
                             <Text style={styles.HeaderText}>Sebzy</Text>
                             <Text style={styles.HeaderTextSmall}>PG Management</Text>
                         </View>
-                        <TouchableOpacity style={{ marginLeft: moderateScale(40), }} onPress={
+                        <TouchableOpacity style={{ marginLeft: moderateScale(10), }} onPress={
 
                             () => translateX.value = withTiming(isOpen ? -MyWidth * 0.8 : 0, { duration: 500 })}>
                             <Image
@@ -282,7 +301,7 @@ export default function DrawerView({
 
 const styles = StyleSheet.create({
     container: {
-        width: '80%',
+        width: screenWidth * 0.7,
         height: '94%',
         // backgroundColor: 'blue',
         backgroundColor: '#272C48',

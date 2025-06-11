@@ -11,5 +11,10 @@ export const Images = {
     VACANT: require('./Vacant.png'),
     PENDING: require('./Pending.png'),
 
+    TUSER: require('./Tuser.png'),
+    TEMAIL: require('./Temail.png'),
+    TCALENDER: require('./Tcalender.png'),
+    TIDPROOF: require('./TidProof.png'),
+    TROOM: require('./Trooms.png'),
 
 }
