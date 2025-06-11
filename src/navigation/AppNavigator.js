@@ -7,7 +7,7 @@ import SplashScreen from '../screen/SplashScreen';
 import DrawerNavigator from './DrawerNavigator';
 import RoomsScreen from '../screen/RoomsScreen';
 import RentManagement from '../screen/RentManagement';
-import Tenants from '../screen/TenantScreen';
+import TenantScreen from '../screen/TenantScreen';
 
 
 export default function AppNavigator() {
@@ -23,7 +23,7 @@ export default function AppNavigator() {
                 <Stack.Screen name='DrawerNavigator' component={DrawerNavigator} />
                 <Stack.Screen name='Rooms' component={RoomsScreen} />
                 <Stack.Screen name='Rent Management' component={RentManagement} />
-                <Stack.Screen name='Tenants' component={Tenants} />
+                <Stack.Screen name='TenantScreen' component={TenantScreen} />
             </Stack.Navigator>
         </>
     )

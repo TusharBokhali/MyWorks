@@ -45,7 +45,7 @@ export default function DrawerView({
                     ? withTiming(hp('20.5%'), { duration: 300 })
                     : currentscreen === 'Rooms'
                         ? withTiming(hp('30.5%'), { duration: 300 })
-                        : currentscreen === 'Tenants'
+                        : currentscreen === 'TenantScreen'
                             ? withTiming(hp('40%'), { duration: 300 })
                             : currentscreen === 'Rent Management'
                                 ? withTiming(hp('50%'), { duration: 300 })
