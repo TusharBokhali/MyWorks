@@ -26,6 +26,8 @@ export const Colors = {
 
     CHARCOLEBLUE: "#252a46",
     GUNMETAL: "#383a42",
+    REDB: "#dc3545",
+    BLUEGRAY: "#1e2a38",
 
 }
 

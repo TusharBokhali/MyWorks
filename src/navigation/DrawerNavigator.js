@@ -56,7 +56,7 @@ export default function DrawerView({
 
             switch (currentscreen) {
                 case 'Dashboard':
-                    translateY.value = withTiming(hp('19%'), { duration: 300 });
+                    translateY.value = withTiming(hp('21%'), { duration: 300 });
                     break;
                 case 'Rooms':
                     translateY.value = withTiming(hp('28.3%'), { duration: 300 });

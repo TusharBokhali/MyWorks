@@ -55,7 +55,7 @@ const HomeScreen = ({navigation}) => {
       button: 'Manage Rooms',
       img: Images.ROOMTOTAL,
       color: '#1b54e3',
-      onPress: () => navigate('Rooms'),
+      onPress: () => navigation.navi('Rooms'),
     },
     {
       id: 2,
@@ -234,7 +234,11 @@ const HomeScreen = ({navigation}) => {
                           <Text
                             style={[
                               styles.HeaderText,
-                              {fontWeight: 800, fontSize: 20},
+                              {
+                                fontWeight: 800,
+                                fontSize: 20,
+                                color: Colors.WHITE,
+                              },
                             ]}>
                             {item.num}
                           </Text>
