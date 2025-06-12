@@ -9,21 +9,21 @@ import {
   ScrollView,
   FlatList,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import React, { useEffect, useState } from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import Animated, {
   FadeInLeft,
   FadeInUp,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import {moderateScale, screenHeight, screenWidth} from '../utils/Metrics';
-import {Colors, Fonts} from '../utils/Theme';
+import { moderateScale, screenHeight, screenWidth } from '../utils/Metrics';
+import { Colors, Fonts } from '../utils/Theme';
 import CustomButton from '../component/CustomButton';
-import {Dropdown} from 'react-native-element-dropdown';
+import { Dropdown } from 'react-native-element-dropdown';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Modal from 'react-native-modal';
-import {Images} from '../assets/image/image';
+import { Images } from '../assets/image/image';
 import FilePickerManager from 'react-native-file-picker';
 import DatePicker from 'react-native-date-picker';
 import Header from '../component/Header';
@@ -45,7 +45,7 @@ const TenantScreen = () => {
   const [selectedRoom, setSelectedRoom] = useState(null);
 
   useEffect(() => {
-    const onChange = ({window}) => {
+    const onChange = ({ window }) => {
       setMyWidth(window.width);
       console.log('window', window.width);
     };
@@ -56,12 +56,12 @@ const TenantScreen = () => {
   }, []);
 
   const data = [
-    {label: 'All Tenants', value: '1'},
-    {label: 'Active', value: '2'},
-    {label: 'Inactive', value: '3'},
-    {label: 'All Tenants2', value: '4'},
-    {label: 'Active2', value: '5'},
-    {label: 'Inactive2', value: '6'},
+    { label: 'All Tenants', value: '1' },
+    { label: 'Active', value: '2' },
+    { label: 'Inactive', value: '3' },
+    { label: 'All Tenants2', value: '4' },
+    { label: 'Active2', value: '5' },
+    { label: 'Inactive2', value: '6' },
   ];
 
   const loadSelectedValue = async () => {
@@ -102,219 +102,32 @@ const TenantScreen = () => {
 
   const AddDataFromUser = () => {
     return (
-      <>
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          style={{
-            flex: 1,
-            // alignItems: 'center',
-            marginHorizontal: moderateScale(20),
-          }}>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              alignSelf: 'flex-start',
-              marginTop: moderateScale(20),
-            }}>
-            <View
-              style={{
-                width: moderateScale(5),
-                height: moderateScale(22),
-                backgroundColor: Colors.BLUE,
-                borderRadius: moderateScale(20),
-                justifyContent: 'center',
-              }}
-            />
-            <View
-              entering={FadeInUp.duration(500).delay(200)}
-              style={{
-                marginHorizontal: moderateScale(10),
-              }}>
-              <Text
-                style={[
-                  styles.HeaderText,
-                  {color: '#FFF', fontSize: moderateScale(22)},
-                ]}>
-                Add New Tenant
-              </Text>
-            </View>
-          </View>
-          <View
-            style={{
-              marginVertical: moderateScale(20),
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
-            <CustomButton
-              text={'<- Back To tenants'}
-              Bg={Colors.BLUE}
-              fun={() => setIsModalVisible(false)}
-            />
+      <Animated.View
+        style={{
+          backgroundColor: Colors.BACKDROP,
+          width: screenWidth * 0.88,
+          height: screenHeight * 0.2,
+          padding: moderateScale(20),
+          borderRadius: moderateScale(20),
+          rowGap: moderateScale(10),
+          marginBottom: moderateScale(20),
+          alignItems: 'center',
+          alignSelf: 'center',
+          justifyContent: 'center',
+        }}>
+        <View>
+          <View style={{ flexDirection: 'row' }}>
+            <Image source={Images.TEMAIL} style={styles.imageMOdal} />
+            <Text style={styles.TextHeaderModal}> Phone Number</Text>
           </View>
 
-          <View
-            style={{
-              backgroundColor: Colors.BACKDROP,
-              width: screenWidth * 0.88,
-              padding: moderateScale(20),
-              borderRadius: moderateScale(20),
-              rowGap: moderateScale(10),
-              marginBottom: moderateScale(20),
-            }}>
-            <View style={{}}>
-              <View style={{flexDirection: 'row'}}>
-                <Image source={Images.TUSER} style={styles.imageMOdal} />
-                <Text style={styles.TextHeaderModal}> Full Name</Text>
-              </View>
-
-              <TextInput
-                placeholder="Enter tenant's full name"
-                style={styles.inputmodal}
-              />
-            </View>
-            <View style={{}}>
-              <View style={{flexDirection: 'row'}}>
-                <Image source={Images.TEMAIL} style={styles.imageMOdal} />
-                <Text style={styles.TextHeaderModal}> Email Address</Text>
-              </View>
-
-              <TextInput
-                placeholder="Enter email address (optional)"
-                style={styles.inputmodal}
-                keyboardType="email-address"
-              />
-            </View>
-            <View style={{}}>
-              <View style={{flexDirection: 'row'}}>
-                <Image source={Images.TEMAIL} style={styles.imageMOdal} />
-                <Text style={styles.TextHeaderModal}> Phone Number</Text>
-              </View>
-
-              <TextInput
-                placeholder="Enter phone number"
-                style={styles.inputmodal}
-                keyboardType="phone-pad"
-              />
-            </View>
-            <View style={{}}>
-              <View style={{flexDirection: 'row'}}>
-                <Image source={Images.TEMAIL} style={styles.imageMOdal} />
-                <Text style={styles.TextHeaderModal}> Occupation</Text>
-              </View>
-
-              <TextInput
-                placeholder="Enter Occupation (optional)"
-                style={styles.inputmodal}
-              />
-            </View>
-            {/* <View style={{}}>
-              <View style={{flexDirection: 'row'}}>
-                <Image source={Images.TIDPROOF} style={styles.imageMOdal} />
-                <Text style={styles.TextHeaderModal}> ID Proof Type</Text>
-              </View>
-
-              <TextInput // yaha pe input box hata ke dropdown rakhna hai
-                placeholder="Select Proof type"
-                style={styles.inputmodal}
-              />
-            </View> */}
-            <View style={{}}>
-              <View style={{flexDirection: 'row'}}>
-                <Image source={Images.TIDPROOF} style={styles.imageMOdal} />
-                <Text style={styles.TextHeaderModal}> Select ID Proof</Text>
-              </View>
-
-              <TouchableOpacity
-                onPress={showFilePicker}
-                style={{
-                  borderWidth: 1,
-                  borderColor: 'gray',
-                  padding: moderateScale(12),
-                  borderRadius: 8,
-                  marginBottom: 15,
-                }}>
-                {file ? (
-                  <Text style={{color: '#fff'}} numberOfLines={1}>
-                    {file.fileName}
-                  </Text>
-                ) : (
-                  <Text style={{color: 'gray'}}> Select Proof</Text>
-                )}
-              </TouchableOpacity>
-            </View>
-            <View style={{}}>
-              <View style={{flexDirection: 'row'}}>
-                <Image source={Images.TROOM} style={styles.imageMOdal} />
-                <Text style={styles.TextHeaderModal}> Room</Text>
-              </View>
-
-              <TouchableOpacity
-                onPress={() => setModalRoom(true)}
-                style={{
-                  borderWidth: 1,
-                  borderColor: 'gray',
-                  padding: moderateScale(12),
-                  borderRadius: 8,
-                  marginBottom: 15,
-                }}>
-                {selectedRoom ? (
-                  <Text style={{color: '#fff'}}>{selectedRoom}</Text>
-                ) : (
-                  <Text style={{color: 'gray'}}>Select Room</Text>
-                )}
-              </TouchableOpacity>
-            </View>
-            <View style={{}}>
-              <View style={{flexDirection: 'row'}}>
-                <Image source={Images.TCALENDER} style={styles.imageMOdal} />
-                <Text style={styles.TextHeaderModal}> Joining Date</Text>
-              </View>
-              <TouchableOpacity
-                onPress={() => setOpen(true)}
-                style={{
-                  borderWidth: 1,
-                  borderColor: 'gray',
-                  padding: moderateScale(12),
-                  borderRadius: 8,
-                  marginBottom: 15,
-                }}>
-                <Text style={{color: 'gray', fontWeight: 600}}>
-                  Date: {formattedDate}
-                </Text>
-
-                <DatePicker
-                  modal
-                  open={open}
-                  date={date}
-                  mode="date"
-                  minimumDate={new Date()}
-                  onConfirm={selectedDate => {
-                    setOpen(false);
-                    setDate(selectedDate);
-                  }}
-                  onCancel={() => setOpen(false)}
-                  theme="dark" // or "light"
-                  textColor="#000"
-                  androidVariant="nativeAndroid"
-                />
-              </TouchableOpacity>
-            </View>
-            <View style={{flexDirection: 'row'}}>
-              {/* <Image
-                source={Images.TUSER}
-                style={{width: moderateScale(22), height: moderateScale(22)}}
-                /> */}
-              <CustomButton
-                text={'Add Tenant'}
-                Bg={Colors.BLUE}
-                fun={() => AddTenantsData()}
-              />
-            </View>
-          </View>
-        </ScrollView>
-      </>
+          <TextInput
+            placeholder="Enter phone number"
+            style={styles.inputmodal}
+            keyboardType="phone-pad"
+          />
+        </View>
+      </Animated.View>
     );
   };
 
@@ -323,7 +136,7 @@ const TenantScreen = () => {
     setIsModalVisible(false);
   };
 
-  const renderItem = ({item}) => (
+  const renderItem = ({ item }) => (
     <TouchableOpacity
       style={styles.item}
       onPress={() => {
@@ -341,7 +154,7 @@ const TenantScreen = () => {
 
   const DrawerHandle = () => {
     const isOpen = translateX.value === 0;
-    translateX.value = withTiming(isOpen ? -MyWidth * 0.8 : 0, {duration: 500});
+    translateX.value = withTiming(isOpen ? -MyWidth * 0.8 : 0, { duration: 500 });
   };
 
   return (
@@ -354,7 +167,7 @@ const TenantScreen = () => {
         <>
           <AnimatedCard
             entering={FadeInLeft.duration(500).delay(200)}
-            style={{margin: moderateScale(20)}}>
+            style={{ margin: moderateScale(20) }}>
             <Text
               style={[
                 styles.HeaderText,
@@ -371,7 +184,7 @@ const TenantScreen = () => {
             entering={FadeInUp.duration(500).delay(200)}
             style={[
               styles.BoxMain,
-              {position: 'absolute', top: screenHeight / 4},
+              { position: 'absolute', top: screenHeight / 4 },
             ]}>
             <View>
               <TextInput
@@ -442,7 +255,7 @@ const TenantScreen = () => {
             entering={FadeInUp.duration(500).delay(200)}
             style={styles.BoxMain}>
             <Text
-              style={[styles.TextToSmall, {marginBottom: moderateScale(10)}]}>
+              style={[styles.TextToSmall, { marginBottom: moderateScale(10) }]}>
               No tenants found. Add your tenant to get started.
             </Text>
             <View style={styles.IconAndTitle}>
@@ -472,7 +285,7 @@ const TenantScreen = () => {
               data={data}
               keyExtractor={item => item.value.toString()}
               renderItem={renderItem}
-              style={{maxHeight: 300}}
+              style={{ maxHeight: 300 }}
             />
 
             <TouchableOpacity
@@ -525,7 +338,7 @@ export default TenantScreen;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    height:screenHeight,
     backgroundColor: Colors.CHARCOLEBLUE,
   },
   BoxMain: {

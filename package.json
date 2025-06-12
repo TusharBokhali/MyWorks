@@ -30,6 +30,8 @@
     "react-native-responsive-screen": "^1.4.2",
     "react-native-safe-area-context": "^5.4.1",
     "react-native-screens": "^4.11.1",
+    "react-native-sms-retriever": "^1.1.1",
+    "react-native-snack": "^1.0.2",
     "react-native-vector-icons": "^10.2.0"
   },
   "devDependencies": {

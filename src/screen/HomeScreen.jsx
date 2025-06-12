@@ -55,7 +55,7 @@ const HomeScreen = ({navigation}) => {
       button: 'Manage Rooms',
       img: Images.ROOMTOTAL,
       color: '#1b54e3',
-      onPress: () => navigation.navi('Rooms'),
+      onPress: () => navigation.navigate('Rooms'),
     },
     {
       id: 2,
@@ -110,13 +110,14 @@ const HomeScreen = ({navigation}) => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
-        nestedScrollEnabled={true}
+        // nestedScrollEnabled={true}
+        scrollEnabled={translateX.value !== 0}
         style={{
           backgroundColor: Colors.GUNMETAL,
         }}
         showsVerticalScrollIndicator={false}>
-        <View style={styles.container}>
           <Header functions={() => DrawerHandle()} />
+        <View style={styles.container} >
           {currentscreen == 'Dashboard' ? (
             <View style={styles.SectionMainView}>
               <Animated.View

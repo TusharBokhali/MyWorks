@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
     Btn:{
         flex:1,
         // width:'70%',
-        height:screenWidth * 0.15,
+        height:50,
         borderRadius:7,
         justifyContent:'center',
         alignItems:'center',

@@ -7,7 +7,7 @@ import { Colors, Fonts } from '../utils/Theme';
 import { Images } from '../assets/image/image';
 import LinearGradient from 'react-native-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { heightPercentageToDP, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { useNavigation } from '@react-navigation/native';
 
 export default function DrawerView({
@@ -40,20 +40,6 @@ export default function DrawerView({
 
     useEffect(() => {
         const NavigateAnimation = () => {
-            // translateY.value =
-            //     currentscreen === 'Dashboard'
-            //         ? withTiming(hp('19%'), { duration: 300 })
-            //         : currentscreen === 'Rooms'
-            //             ? withTiming(hp('28.3%'), { duration: 300 })
-            //             : currentscreen === 'Tenants'
-            //                 ? withTiming(hp('37.5%'), { duration: 300 })
-            //             ? withTiming(hp('30.5%'), { duration: 300 })
-            //             : currentscreen === 'TenantScreen'
-            //                 ? withTiming(hp('40%'), { duration: 300 })
-            //                 : currentscreen === 'Rent Management'
-            //                     ? withTiming(hp('47%'), { duration: 300 })
-            //                     : withTiming(hp('20.5%'), { duration: 300 })
-
             switch (currentscreen) {
                 case 'Dashboard':
                     translateY.value = withTiming(hp('21%'), { duration: 300 });
@@ -143,157 +129,200 @@ export default function DrawerView({
                     </View>
                 </AnimatedCard>
 
-                <AnimatedLinear
-                    colors={['#6366f1cc', '#4f46e5cc']}
-                    start={{ x: 0, y: 0 }}
-                    end={{ x: 0.5, y: 0 }}
-                    style={[{
-                        width: '90%',
-                        height: '10%',
-                        alignSelf: 'center',
-                        borderRadius: 12,
-                        position: 'absolute',
-                        zIndex: -2,
-                    }, navigateAnimation]}
-                >
-                    <View style={styles.LightWidth} />
-                </AnimatedLinear>
-                <AnimatedCard
-                    onPress={() => NavigationNextScreen('Dashboard')}
-                    entering={FadeInLeft.duration(500).delay(200)}
-                    style={[styles.SelectedStyle,]}
-                >
-                    <Image
-                        style={{
-                            width: moderateScale(40),
-                            height: moderateScale(40),
-                            tintColor: '#fff'
-                        }}
-                        source={Images.USER}
-                    />
+                <View style={{
+                    width: '90%',
+                    height: 60,
+                    alignSelf: 'center',
+                    borderRadius: 12,
+                    overflow: 'hidden',
+                    borderLeftWidth: currentscreen == 'Dashboard' ? 5 : 0,
+                    borderColor: currentscreen == 'Dashboard' ? Colors.WHITE : ""
+                }}>
+                    {
+                        currentscreen == 'Dashboard' &&
+                        <View style={{ flex: 1, backgroundColor: '#6366f1cc' }} />
 
-                    <Text style={[styles.HeaderText]}>Dashbord</Text>
-                </AnimatedCard>
+                    }
 
-                <AnimatedCard
-                    onPress={() => NavigationNextScreen('Rooms')}
-                    entering={FadeInLeft.duration(500).delay(200)}
-                    style={styles.SelectedStyle}
-                >
-                    <View
-                        style={{
-                            width: moderateScale(40),
-                            height: moderateScale(40),
-                            backgroundColor: 'rgba(255, 255, 255, 0.2)',
-                            borderRadius: moderateScale(12),
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            marginRight: moderateScale(10),
-                        }}
-                    >
-                        <Image
-                            style={{
-                                width: moderateScale(26),
-                                height: moderateScale(26),
-                                tintColor: '#fff'
-                            }}
-                            source={Images.ROOMTOTAL}
-                        />
-                    </View>
-                    <Text style={[styles.HeaderText]}>Rooms</Text>
-                </AnimatedCard>
+                    <View style={{
+                        ...StyleSheet.absoluteFillObject,
+                        justifyContent: 'center',
+                        // alignItems: 'center',
+                    }}>
 
-                <AnimatedCard
-                    onPress={() => NavigationNextScreen('Tenants')}
-                    entering={FadeInLeft.duration(500).delay(200)}
-                    style={styles.SelectedStyle}
-                >
-                    <View
-                        style={{
-                            width: moderateScale(40),
-                            height: moderateScale(40),
-                            backgroundColor: 'rgba(255, 255, 255, 0.2)',
-                            borderRadius: moderateScale(12),
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            marginRight: moderateScale(10),
-                        }}
-                    >
-                        <Image
-                            style={{
-                                width: moderateScale(26),
-                                height: moderateScale(26),
-                            }}
-                            source={Images.TENATES}
-                        /></View>
-                    <Text style={[styles.HeaderText]}>Tenants</Text>
-                </AnimatedCard>
-
-                <AnimatedCard
-                    onPress={() => NavigationNextScreen('Rent Management')}
-                    entering={FadeInLeft.duration(500).delay(200)}
-                    style={styles.SelectedStyle}
-                >
-                    <View
-                        style={{
-                            width: moderateScale(40),
-                            height: moderateScale(40),
-                            backgroundColor: 'rgba(255, 255, 255, 0.2)',
-                            borderRadius: moderateScale(12),
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            marginRight: moderateScale(10),
-                        }}
-                    >
-                        <Image
-                            style={{
-                                width: moderateScale(26),
-                                height: moderateScale(26),
-                                tintColor: '#fff'
-                            }}
-                            source={Images.RENT}
-                        /></View>
-                    <Text style={[styles.HeaderText]}>Rent Management</Text>
-                </AnimatedCard>
-
-
-                {/* <AnimatedCard entering={FadeInLeft.duration(500).delay(200)}>
-                    <LinearGradient
-                        colors={['#5A53D4', '#6A5AE0']}
-                        start={{ x: 0, y: 1 }}
-                        end={{ x: 1, y: 0 }}
-                        style={[
-                            styles.SelectedStyle,
-                            { flexDirection: 'row', alignItems: 'center', padding: moderateScale(10), borderRadius: moderateScale(12) },
-                        ]}
-                    >
-                        <View
-                            style={{
-                                width: moderateScale(40),
-                                height: moderateScale(40),
-                                backgroundColor: 'rgba(255, 255, 255, 0.2)',
-                                borderRadius: moderateScale(12),
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                marginRight: moderateScale(10),
-                            }}
+                        <AnimatedCard
+                            onPress={() => NavigationNextScreen('Dashboard')}
+                            entering={FadeInLeft.duration(500).delay(200)}
+                            style={[styles.SelectedStyle,]}
                         >
                             <Image
-                                source={Images.RENT}
                                 style={{
-                                    width: moderateScale(26),
-                                    height: moderateScale(26),
-                                    tintColor: 'white',
+                                    width: moderateScale(40),
+                                    height: moderateScale(40),
+                                    tintColor: '#fff'
                                 }}
+                                source={Images.USER}
                             />
-                        </View>
-                        <Text style={[styles.text, { color: 'white', fontWeight: '600' }]}>
-                            RENT MANAGEMENT
-                        </Text>
-                    </LinearGradient>
-                </AnimatedCard> */}
+
+                            <Text style={[styles.HeaderText]}>Dashbord</Text>
+                        </AnimatedCard>
+                    </View>
+                </View>
+
+                <View style={{
+                    width: '90%',
+                    height: 60,
+                    alignSelf: 'center',
+                    borderRadius: 12,
+                    overflow: 'hidden',
+                    borderLeftWidth: currentscreen == 'Rooms' ? 5 : 0,
+                    borderColor: currentscreen == 'Rooms' ? Colors.WHITE : ""
+                }}>
+                    {
+                        currentscreen == 'Rooms' &&
+                        <View style={{ flex: 1, backgroundColor: '#6366f1cc' }} />
+
+                    }
+                    {/* <View style={{ flex: 1, backgroundColor: '#4f46e5cc' }} /> */}
+
+                    <View style={{
+                        ...StyleSheet.absoluteFillObject,
+                        justifyContent: 'center',
+                        // alignItems: 'center',
+                    }}>
+                        {/* Your AnimatedCard */}
+                        <AnimatedCard
+                            onPress={() => NavigationNextScreen('Rooms')}
+                            entering={FadeInLeft.duration(500).delay(200)}
+                            style={styles.SelectedStyle}
+                        >
+                            <View
+                                style={{
+                                    width: moderateScale(40),
+                                    height: moderateScale(40),
+                                    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                                    borderRadius: moderateScale(12),
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    marginRight: moderateScale(10),
+                                }}
+                            >
+                                <Image
+                                    style={{
+                                        width: moderateScale(26),
+                                        height: moderateScale(26),
+                                        tintColor: '#fff'
+                                    }}
+                                    source={Images.ROOMTOTAL}
+                                />
+                            </View>
+                            <Text style={[styles.HeaderText]}>Rooms</Text>
+                        </AnimatedCard>
+                    </View>
+                </View>
+
+                <View style={{
+                    width: '90%',
+                    height: 60,
+                    alignSelf: 'center',
+                    borderRadius: 12,
+                    overflow: 'hidden',
+                    borderLeftWidth: currentscreen == 'Tenants' ? 5 : 0,
+                    borderColor: currentscreen == 'Tenants' ? Colors.WHITE : ""
+                }}>
+                    {
+                        currentscreen == 'Tenants' &&
+                        <View style={{ flex: 1, backgroundColor: '#6366f1cc' }} />
+
+                    }
 
 
+                    <View style={{
+                        ...StyleSheet.absoluteFillObject,
+                        justifyContent: 'center',
+
+                    }}>
+
+                        <AnimatedCard
+                            onPress={() => NavigationNextScreen('Tenants')}
+                            entering={FadeInLeft.duration(500).delay(200)}
+                            style={styles.SelectedStyle}
+                        >
+                            <View
+                                style={{
+                                    width: moderateScale(40),
+                                    height: moderateScale(40),
+                                    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                                    borderRadius: moderateScale(12),
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    marginRight: moderateScale(10),
+                                }}
+                            >
+                                <Image
+                                    style={{
+                                        width: moderateScale(26),
+                                        height: moderateScale(26),
+                                    }}
+                                    source={Images.TENATES}
+                                /></View>
+                            <Text style={[styles.HeaderText]}>Tenants</Text>
+                        </AnimatedCard>
+                        {/* Your AnimatedCard */}
+                    </View>
+                </View>
+
+
+
+                <View style={{
+                    width: '90%',
+                    height: 60,
+                    alignSelf: 'center',
+                    borderRadius: 12,
+                    overflow: 'hidden',
+                    borderLeftWidth: currentscreen == 'Rent Management' ? 5 : 0,
+                    borderColor: currentscreen == 'Rent Management' ? Colors.WHITE : ""
+                }}>
+                    {
+                        currentscreen == 'Rent Management' &&
+                        <View style={{ flex: 1, backgroundColor: '#6366f1cc' }} />
+
+                    }
+
+                    <View style={{
+                        ...StyleSheet.absoluteFillObject,
+                        justifyContent: 'center',
+                        // alignItems: 'center',
+                    }}>
+                        {/* Your AnimatedCard */}
+                        <AnimatedCard
+                            onPress={() => NavigationNextScreen('Rent Management')}
+                            entering={FadeInLeft.duration(500).delay(200)}
+                            style={styles.SelectedStyle}
+                        >
+                            <View
+                                style={{
+                                    width: moderateScale(40),
+                                    height: moderateScale(40),
+                                    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                                    borderRadius: moderateScale(12),
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    marginRight: moderateScale(10),
+                                }}
+                            >
+                                <Image
+                                    style={{
+                                        width: moderateScale(26),
+                                        height: moderateScale(26),
+                                        tintColor: '#fff'
+                                    }}
+                                    source={Images.RENT}
+                                /></View>
+                            <Text style={[styles.HeaderText]}>Rent Management</Text>
+                        </AnimatedCard>
+                    </View>
+                </View>
             </Animated.View >
         </>
     )
@@ -301,9 +330,8 @@ export default function DrawerView({
 
 const styles = StyleSheet.create({
     container: {
-        width: screenWidth * 0.7,
-        height: '94%',
-        // backgroundColor: 'blue',
+        width: screenWidth * 0.8,
+        height: heightPercentageToDP(87),
         backgroundColor: '#272C48',
         position: 'absolute',
         bottom: 0,
@@ -361,18 +389,14 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         gap: moderateScale(6),
-        padding: moderateScale(10),
+        // padding: moderateScale(10),
         // backgroundColor: 'rgba(255, 255, 255, 0.1)',
         marginHorizontal: moderateScale(20),
         marginVertical: moderateScale(10),
         borderRadius: moderateScale(16),
         opacity: moderateScale(0.3)
     },
-    LightWidth: {
-        width: 2,
-        // height:'100%',
-        backgroundColor: Colors.WHITE
-    }
+
 })
 
 
