@@ -23,3 +23,5 @@ snack bar use karva nu ke ne to aa install karva nu che okay
 
 npm i react-native-snack     // snackbar 
 npm i react-native-sms-retriever    // autofill otp
+npm i react-native-text-recognition   // image se text fatch karne ke liye
+npm i @twotalltotems/react-native-otp-input    // otp input ke liye

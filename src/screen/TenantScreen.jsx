@@ -28,6 +28,7 @@ import FilePickerManager from 'react-native-file-picker';
 import DatePicker from 'react-native-date-picker';
 import Header from '../component/Header';
 import DrawerView from '../navigation/DrawerNavigator';
+import OTPInputView from '@twotalltotems/react-native-otp-input';
 
 const TenantScreen = () => {
   const AnimatedCard = Animated.createAnimatedComponent(TouchableOpacity);
@@ -40,6 +41,7 @@ const TenantScreen = () => {
   const [text, setText] = useState('');
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [modalRoom, setModalRoom] = useState(false);
+  const [modalOTP, setModalOTP] = useState(false);
   const [selectedRoom, setSelectedRoom] = useState(null);
 
   useEffect(() => {
@@ -307,13 +309,18 @@ const TenantScreen = () => {
               <CustomButton
                 text={'Add Tenant'}
                 Bg={Colors.BLUE}
-                fun={() => setIsModalVisible(false)}
+                fun={() => AddTenantsData()}
               />
             </View>
           </View>
         </ScrollView>
       </>
     );
+  };
+
+  const AddTenantsData = () => {
+    setModalOTP(true);
+    setIsModalVisible(false);
   };
 
   const renderItem = ({item}) => (
@@ -476,11 +483,40 @@ const TenantScreen = () => {
           </View>
         </View>
       </Modal>
-      <DrawerView
-        translateX={translateX}
-        // currentscreen={currentscreen}
-        // setCurrentScreen={setCurrentScreen}
-      />
+      <Modal
+        transparent
+        animationType="fade"
+        visible={modalOTP}
+        onRequestClose={() => setModalOTP(false)}>
+        <View style={styles.modalBackdrop}>
+          <View style={styles.dropdownBox}>
+            <Text style={styles.label}>Select a room</Text>
+            {/* <OTPInputView
+              style={{width: '80%', height: 200}}
+              pinCount={4}
+              // code={this.state.code} //You can supply this prop or not. The component will be used as a controlled / uncontrolled component respectively.
+              // onCodeChanged = {code => { this.setState({code})}}
+              autoFocusOnLoad
+              codeInputFieldStyle={styles.underlineStyleBase}
+              codeInputHighlightStyle={styles.underlineStyleHighLighted}
+              onCodeFilled={code => {
+                console.log(`Code is ${code}, you are good to go!`);
+              }}
+            /> */}
+
+            <TouchableOpacity
+              style={styles.closeButton}
+              onPress={() => setModalOTP(false)}>
+              <Text style={styles.closeText}>Close</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+      {/* <DrawerView */}
+      {/* // translateX={translateX}
+      // currentscreen={currentscreen}
+      // setCurrentScreen={setCurrentScreen} */}
+      {/* /> */}
     </SafeAreaView>
   );
 };
@@ -563,7 +599,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
 
-  //
+  // modal
   modalBackdrop: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.6)',
@@ -614,5 +650,26 @@ const styles = StyleSheet.create({
   closeText: {
     color: '#00BFFF',
     fontSize: 16,
+  },
+
+  // otp
+  borderStyleBase: {
+    width: 30,
+    height: 45,
+  },
+
+  borderStyleHighLighted: {
+    borderColor: '#03DAC6',
+  },
+
+  underlineStyleBase: {
+    width: 30,
+    height: 45,
+    borderWidth: 0,
+    borderBottomWidth: 1,
+  },
+
+  underlineStyleHighLighted: {
+    borderColor: '#03DAC6',
   },
 });
