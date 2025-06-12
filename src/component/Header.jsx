@@ -57,8 +57,8 @@ const Header = ({functions}) => {
             <Text style={styles.HeaderTextSmall}>PG Management</Text>
           </View>
         </Animated.View>
-        <AnimatedCard
-          entering={FadeInRight.duration(500).delay(200)}
+        <TouchableOpacity
+          
           style={{
             backgroundColor: '#1d1d3b',
             padding: moderateScale(6),
@@ -81,7 +81,7 @@ const Header = ({functions}) => {
             <Text style={[styles.HeaderText]}>Johan</Text>
             <Text style={[styles.HeaderTextSmall, {color: '#FFF'}]}>India</Text>
           </View>
-        </AnimatedCard>
+        </TouchableOpacity>
       </View>
       {/* 
       {isSelected ? (

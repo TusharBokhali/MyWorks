@@ -9,7 +9,7 @@ import {
   ScrollView,
   FlatList,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { use, useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Animated, {
   FadeInLeft,
@@ -29,7 +29,7 @@ import DatePicker from 'react-native-date-picker';
 import Header from '../component/Header';
 import DrawerView from '../navigation/DrawerNavigator';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
-
+import CountryPicker from 'react-native-country-picker-modal'
 const TenantScreen = () => {
   const AnimatedCard = Animated.createAnimatedComponent(TouchableOpacity);
   const [MyWidth, setMyWidth] = useState(Dimensions.get('window').width);
@@ -43,7 +43,14 @@ const TenantScreen = () => {
   const [modalRoom, setModalRoom] = useState(false);
   const [modalOTP, setModalOTP] = useState(false);
   const [selectedRoom, setSelectedRoom] = useState(null);
-
+  const [Country, setCountry] = useState('91')
+  const [withFlag, setwithFlag] = useState('')
+  
+  
+  const [withAlphaFilter, setwithAlphaFilter] = useState('')
+  const [withFilter, setwithFilter] = useState('')
+  const [withEmoji, setwithEmoji] = useState('')
+  const [countryCode, setCountryCode] = useState('')
   useEffect(() => {
     const onChange = ({ window }) => {
       setMyWidth(window.width);
@@ -92,6 +99,12 @@ const TenantScreen = () => {
       }
     });
   };
+  const onSelect = (country) => {
+    console.log(country);
+    
+    setCountryCode(country.cca2)
+    setCountry(country?.callingCode)
+  }
 
   const formattedDate = date.toLocaleDateString('en-GB', {
     // weekday: 'short',
@@ -106,26 +119,49 @@ const TenantScreen = () => {
         style={{
           backgroundColor: Colors.BACKDROP,
           width: screenWidth * 0.88,
-          height: screenHeight * 0.2,
+          height: screenHeight * 0.4,
           padding: moderateScale(20),
           borderRadius: moderateScale(20),
           rowGap: moderateScale(10),
           marginBottom: moderateScale(20),
-          alignItems: 'center',
+          // alignItems: 'center',
           alignSelf: 'center',
-          justifyContent: 'center',
+          // justifyContent: 'center',
         }}>
         <View>
           <View style={{ flexDirection: 'row' }}>
             <Image source={Images.TEMAIL} style={styles.imageMOdal} />
             <Text style={styles.TextHeaderModal}> Phone Number</Text>
           </View>
+          <View style={styles.flex}>
+            <View style={styles.CountryBox}>
 
-          <TextInput
-            placeholder="Enter phone number"
-            style={styles.inputmodal}
-            keyboardType="phone-pad"
-          />
+              <CountryPicker
+                theme={{
+                  fontFamily: 'System',
+                  fontSize: 16,
+                  onBackgroundTextColor: 'white',   // <-- Text inside modal including title
+                  backgroundColor: '#1e1e1e',        // Optional: dark background
+                }}
+                {...{
+                  countryCode,
+                  withFilter: true,
+                  withFlag: true,
+                  withAlphaFilter,
+                  withCallingCode:true,
+                  withEmoji: true,
+                  onSelect,
+                }}
+                visible
+              />
+            </View>
+            <TextInput
+              placeholder="Enter phone number"
+              style={styles.inputmodal}
+              keyboardType="phone-pad"
+              placeholderTextColor={Colors.WHITE}
+            />
+          </View>
         </View>
       </Animated.View>
     );
@@ -338,7 +374,7 @@ export default TenantScreen;
 
 const styles = StyleSheet.create({
   container: {
-    height:screenHeight,
+    height: screenHeight,
     backgroundColor: Colors.CHARCOLEBLUE,
   },
   BoxMain: {
@@ -392,11 +428,14 @@ const styles = StyleSheet.create({
     color: Colors.WHITE,
   },
   inputmodal: {
+    width: '60%',
     borderWidth: 1,
     borderColor: 'gray',
     padding: moderateScale(12),
     borderRadius: 8,
     marginBottom: 15,
+    paddingLeft: 25,
+    // marginTop: 30
   },
   closeButton: {
     backgroundColor: Colors.REDB,
@@ -485,4 +524,18 @@ const styles = StyleSheet.create({
   underlineStyleHighLighted: {
     borderColor: '#03DAC6',
   },
+  CountryBox: {
+    width: '30%',
+    height: 50,
+    borderRadius: 7,
+    borderWidth: 1,
+    borderColor: Colors.GRAY
+  },
+  flex: {
+    flexDirection: 'row',
+    // alignItems: 'center',
+    marginTop:30,
+    width: '100%',
+    gap: 15
+  }
 });

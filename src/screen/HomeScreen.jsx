@@ -1,4 +1,5 @@
 import {
+  Alert,
   Dimensions,
   FlatList,
   Image,
@@ -45,6 +46,11 @@ const HomeScreen = ({navigation}) => {
   const AnimatedCard = Animated.createAnimatedComponent(TouchableOpacity);
   const [MyWidth, setMyWidth] = useState(Dimensions.get('window').width);
   const [currentscreen, setCurrentScreen] = useState('Dashboard');
+  const [IsOpen,setOpen] = useState(false);
+  const HandleNavigation = (screen)=>{
+    setCurrentScreen(screen)
+     translateX.value = withTiming( -MyWidth * 0.8, { duration: 500 })
+  }
   const Data = [
     {
       id: 1,
@@ -55,7 +61,7 @@ const HomeScreen = ({navigation}) => {
       button: 'Manage Rooms',
       img: Images.ROOMTOTAL,
       color: '#1b54e3',
-      onPress: () => navigation.navigate('Rooms'),
+      onPress: () => HandleNavigation('Rooms'),
     },
     {
       id: 2,
@@ -66,19 +72,19 @@ const HomeScreen = ({navigation}) => {
       button: 'View all tenants',
       img: Images.TENATES,
       color: '#41bf95',
-      onPress: () => navigation.navigate('TenantScreen'),
+      onPress: () => HandleNavigation('TenantScreen'),
     },
-    {
-      id: 3,
-      title: 'Pending Rents',
-      num: 0,
-      text: 'All rents are paid',
-      range: 0.2,
-      button: 'View pending rents',
-      img: Images.PENDING,
-      color: '#eda743',
-      onPress: () => navigate('TenantScreen'),
-    },
+    // {
+    //   id: 3,
+    //   title: 'Pending Rents',
+    //   num: 0,
+    //   text: 'All rents are paid',
+    //   range: 0.2,
+    //   button: 'View pending rents',
+    //   img: Images.PENDING,
+    //   color: '#eda743',
+    //   onPress: () => setCurrentScreen('TenantScreen'),
+    // },
     {
       id: 4,
       title: 'Vacant Rooms',
@@ -88,7 +94,7 @@ const HomeScreen = ({navigation}) => {
       button: 'Manage vacant rooms',
       img: Images.VACANT,
       color: '#ea5d5d',
-      onPress: () => navigate('Rent Management'),
+      onPress: () => HandleNavigation('Rent Management'),
     },
   ];
   useEffect(() => {
@@ -102,22 +108,24 @@ const HomeScreen = ({navigation}) => {
     return () => subscription?.remove();
   }, []);
 
-  const DrawerHandle = () => {
-    const isOpen = translateX.value === 0;
-    translateX.value = withTiming(isOpen ? -MyWidth * 0.8 : 0, {duration: 500});
-  };
+ 
+const DrawerHandle = () => {
+  const isCurrentlyOpen = translateX.value !== 0;
+  setOpen(isCurrentlyOpen);
+  translateX.value = withTiming(isCurrentlyOpen ? 0 : -MyWidth * 0.8, { duration: 500 });
+};
 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
         // nestedScrollEnabled={true}
-        scrollEnabled={translateX.value !== 0}
+        scrollEnabled={!IsOpen}
         style={{
           backgroundColor: Colors.GUNMETAL,
         }}
         showsVerticalScrollIndicator={false}>
           <Header functions={() => DrawerHandle()} />
-        <View style={styles.container} >
+        <View pointerEvents={IsOpen ? 'none' :'auto'} style={[styles.container,{opacity:IsOpen ? 0.2 : 1}]} >
           {currentscreen == 'Dashboard' ? (
             <View style={styles.SectionMainView}>
               <Animated.View
@@ -359,7 +367,7 @@ const HomeScreen = ({navigation}) => {
             </View>
           ) : currentscreen == 'Rooms' ? (
             <RoomsScreen />
-          ) : currentscreen == 'Tenants' ? (
+          ) : currentscreen == 'TenantScreen' ? (
             <TenantScreen />
           ) : (
             currentscreen == 'Rent Management' && <RentManagement />
@@ -370,6 +378,7 @@ const HomeScreen = ({navigation}) => {
         translateX={translateX}
         currentscreen={currentscreen}
         setCurrentScreen={setCurrentScreen}
+        setOpen={setOpen}
       />
     </SafeAreaView>
   );

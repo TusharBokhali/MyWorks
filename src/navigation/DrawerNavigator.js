@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity, Dimensions, Image } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, Dimensions, Image, Alert } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import Animated, { FadeInLeft, FadeInRight, FadeInUp, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
@@ -13,7 +13,8 @@ import { useNavigation } from '@react-navigation/native';
 export default function DrawerView({
     translateX,
     currentscreen,
-    setCurrentScreen
+    setCurrentScreen,
+    setOpen
 }) {
     const AnimatedCard = Animated.createAnimatedComponent(TouchableOpacity);
     const [MyWidth, setMyWidth] = useState(Dimensions.get('window').width);
@@ -21,7 +22,7 @@ export default function DrawerView({
     const isOpen = translateX.value === 0
     const { navigate } = useNavigation();
     const AnimatedLinear = Animated.createAnimatedComponent(LinearGradient)
-    const [Toogle, setToggle] = useState(0);
+
     const draweropenstyle = useAnimatedStyle(() => {
         return {
             transform: [{
@@ -29,6 +30,7 @@ export default function DrawerView({
             }]
         }
     }, [])
+    // Alert.alert(String(isOpen));
 
     const navigateAnimation = useAnimatedStyle(() => {
         return {
@@ -38,40 +40,15 @@ export default function DrawerView({
         }
     }, [])
 
-    useEffect(() => {
-        const NavigateAnimation = () => {
-            switch (currentscreen) {
-                case 'Dashboard':
-                    translateY.value = withTiming(hp('21%'), { duration: 300 });
-                    break;
-                case 'Rooms':
-                    translateY.value = withTiming(hp('28.3%'), { duration: 300 });
-                    break;
-                case 'Tenants':
-                    translateY.value = withTiming(hp('37.5%'), { duration: 300 });
-                    break;
-                case 'TenantScreen':
-                    translateY.value = withTiming(hp('40%'), { duration: 300 });
-                    break;
-                case 'Rent Management':
-                    translateY.value = withTiming(hp('47%'), { duration: 300 });
-                    break;
-                default:
-                    translateY.value = withTiming(hp('20.5%'), { duration: 300 });
-            }
-            // navigate(currentscreen);
+    // useEffect(() => {
+    // }, [currentscreen])
 
-            Toogle > 0 && (
-                translateX.value = withTiming(isOpen ? -MyWidth * 0.8 : 0, { duration: 500 })
-            )
-            setToggle(pre => pre + 1);
-        };
-        NavigateAnimation();
-    }, [currentscreen])
 
 
     const NavigationNextScreen = (screen) => {
         setCurrentScreen(screen);
+        setOpen(false)
+        translateX.value = withTiming(-MyWidth * 0.8, { duration: 500 })
     }
     return (
         < >
@@ -227,11 +204,11 @@ export default function DrawerView({
                     alignSelf: 'center',
                     borderRadius: 12,
                     overflow: 'hidden',
-                    borderLeftWidth: currentscreen == 'Tenants' ? 5 : 0,
-                    borderColor: currentscreen == 'Tenants' ? Colors.WHITE : ""
+                    borderLeftWidth: currentscreen == 'TenantScreen' ? 5 : 0,
+                    borderColor: currentscreen == 'TenantScreen' ? Colors.WHITE : ""
                 }}>
                     {
-                        currentscreen == 'Tenants' &&
+                        currentscreen == 'TenantScreen' &&
                         <View style={{ flex: 1, backgroundColor: '#6366f1cc' }} />
 
                     }
@@ -244,7 +221,7 @@ export default function DrawerView({
                     }}>
 
                         <AnimatedCard
-                            onPress={() => NavigationNextScreen('Tenants')}
+                            onPress={() => NavigationNextScreen('TenantScreen')}
                             entering={FadeInLeft.duration(500).delay(200)}
                             style={styles.SelectedStyle}
                         >
@@ -323,6 +300,10 @@ export default function DrawerView({
                         </AnimatedCard>
                     </View>
                 </View>
+
+
+
+
             </Animated.View >
         </>
     )
