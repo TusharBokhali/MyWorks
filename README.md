@@ -15,7 +15,7 @@ adb connect 192.168.112.214:5553 reply:- connected to 192.168.112.214:5553
 
 
 
-
+npm i react-native-otp-entry
 
 
 
