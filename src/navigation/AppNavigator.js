@@ -8,6 +8,7 @@ import DrawerNavigator from './DrawerNavigator';
 import RoomsScreen from '../screen/RoomsScreen';
 import RentManagement from '../screen/RentManagement';
 import TenantScreen from '../screen/TenantScreen';
+import UserImageCapture from '../component/UserImageCapture';
 
 
 export default function AppNavigator() {
@@ -24,6 +25,7 @@ export default function AppNavigator() {
                 <Stack.Screen name='Rooms' component={RoomsScreen} />
                 <Stack.Screen name='Rent Management' component={RentManagement} />
                 <Stack.Screen name='TenantScreen' component={TenantScreen} />
+                <Stack.Screen name='UserImageCapture' component={UserImageCapture} />
             </Stack.Navigator>
         </>
     )

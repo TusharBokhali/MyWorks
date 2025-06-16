@@ -72,7 +72,7 @@ export default function DrawerView({
                             <Text style={styles.HeaderText}>Sebzy</Text>
                             <Text style={styles.HeaderTextSmall}>PG Management</Text>
                         </View>
-                        <TouchableOpacity style={{ marginLeft: moderateScale(10), }} onPress={
+                        {/* <TouchableOpacity style={{ marginLeft: moderateScale(10), }} onPress={
 
                             () => translateX.value = withTiming(isOpen ? -MyWidth * 0.8 : 0, { duration: 500 })}>
                             <Image
@@ -83,7 +83,7 @@ export default function DrawerView({
                                 }}
                                 source={Images.close}
                             />
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
                     </AnimatedCard>
                 </View>
 
@@ -312,7 +312,7 @@ export default function DrawerView({
 const styles = StyleSheet.create({
     container: {
         width: screenWidth * 0.8,
-        height: heightPercentageToDP(87),
+        height: screenHeight - 76,
         backgroundColor: '#272C48',
         position: 'absolute',
         bottom: 0,
