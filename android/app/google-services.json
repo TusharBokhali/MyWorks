@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "961652173115",
+    "project_id": "ecom-app-ea09a",
+    "storage_bucket": "ecom-app-ea09a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:961652173115:android:9a956493f5a9c9a903af1e",
+        "android_client_info": {
+          "package_name": "com.ecommerce"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAgEMek2EsRh9qNRHHJGnpvX-YXjLgJvXM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:961652173115:android:3232e45acb30f49903af1e",
+        "android_client_info": {
+          "package_name": "com.myvercel"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAgEMek2EsRh9qNRHHJGnpvX-YXjLgJvXM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

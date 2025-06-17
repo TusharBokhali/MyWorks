@@ -24,7 +24,7 @@ const UserImageCapture = () => {
   const device = useCameraDevice('front');
   const cameraRef = useRef(null);
   const [manageFormDetails, setManageFromDetails] = useState();
-  const [selectProof, setSelectProof] = useState(null); 
+  const [selectProof, setSelectProof] = useState(null); // NEW STATE for Aadhaar proof
   const [formData, setFormData] = useState({
     name: '',
     aadhar: '',
@@ -34,6 +34,16 @@ const UserImageCapture = () => {
     profilePhoto: null,
   });
   console.log('form data state', formData);
+
+  // useEffect(() => {
+  //   const requestCameraPermission = async () => {
+  //     const status = await PermissionsAndroid.request(
+  //       'android.permission.CAMERA',
+  //     );
+  //     setHasCameraPermission(status === 'granted');
+  //   };
+  //   requestCameraPermission();
+  // }, []);
 
   useEffect(() => {
     const requestCameraPermission = async () => {
