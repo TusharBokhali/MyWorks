@@ -4,8 +4,8 @@ import {
   StyleSheet,
   FlatList,
   TextInput,
-  Touchable,
   TouchableOpacity,
+  Alert,
   Image,
 } from 'react-native';
 import React, {useRef, useState} from 'react';
@@ -15,75 +15,128 @@ import {
 } from 'react-native-responsive-screen';
 import {Colors, Fonts} from '../utils/Theme';
 import {OtpInput} from 'react-native-otp-entry';
-import {moderateScale} from '../utils/Metrics';
+import {moderateScale, screenWidth} from '../utils/Metrics';
 import {useNavigation} from '@react-navigation/native';
-// import CountryPicker from 'react-native-country-picker-modal';
+import auth, {getAuth} from '@react-native-firebase/auth';
 
 export default function TenantScreen() {
   const {navigate} = useNavigation();
-  const [countryCode, setCountryCode] = useState('IN');
-  const [country, setCountry] = useState(null);
-  const [modalVisible, setModalVisible] = useState(false); // To control modal visibility
-  const [withCallingCode, setWithCallingCode] = useState(`+91`);
 
   const [Phonenumber, setPhonenumber] = useState('');
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [FinalIndex, setFinalIndex] = useState(0);
   const [OTP, setOTP] = useState('');
+  const [confirm, setConfirm] = useState(null);
+  const [withCallingCode] = useState(`+91`);
+
+  const [currentIndex, setCurrentIndex] = useState(0);
   const flatListRef = useRef(null);
+
   const CreateTenantsSteps = [
     {
       title: 'Enter Mobile Number',
-      buttonText: 'continue',
+      buttonText: 'Continue',
       type: 'phonenumber',
       disbled: !(Phonenumber?.length >= 10),
     },
     {
       title: 'OTP',
-      buttonText: 'continue',
+      buttonText: 'Verify',
       type: 'OTP',
-      disbled: !(OTP >= 4),
+      disbled: !(OTP?.length === 6),
     },
   ];
-  const SelfHandle = index => {
-    flatListRef.current?.scrollToIndex({index: index, animated: true});
-    setCurrentIndex(index);
-    setFinalIndex(index);
-  };
-  const onSelect = selectedCountry => {
-    setCountryCode(selectedCountry.cca2);
-    setCountry(selectedCountry);
-    setModalVisible(false); // Close modal after selection
-    console.log('Selected Country:', selectedCountry);
-  };
-  const phonenumberfun = async text => {
-    if (currentIndex < CreateTenantsSteps.length - 1 && text?.length >= 10) {
-      const newIndex = currentIndex + 1;
-      flatListRef.current?.scrollToIndex({index: newIndex, animated: true});
-      setCurrentIndex(newIndex);
-      setFinalIndex(newIndex);
-    }
+
+  const phonenumberfun = text => {
     setPhonenumber(text);
   };
+
   const OTPHandle = otp => {
     setOTP(otp);
   };
+
+  const sendOtp = async () => {
+    if (Phonenumber.length < 10) {
+      Alert.alert('Please enter a valid 10-digit mobile number.');
+      return;
+    }
+
+    const formattedPhoneNumber = `${withCallingCode}${Phonenumber}`;
+
+    // ✅ Enforce only test numbers
+    const allowedTestNumbers = ['+911234567890']; 
+    const testOtpCode = '123456';
+
+    if (!allowedTestNumbers.includes(formattedPhoneNumber)) {
+      Alert.alert(
+        'This is a test app. Only predefined test numbers are allowed.\n\nUse +911234567890',
+      );
+      return;
+    }
+
+    try {
+      const formattedPhoneNumber = `${withCallingCode}${Phonenumber}`;
+      const confirmation = await getAuth().signInWithPhoneNumber(
+        formattedPhoneNumber,
+      );
+      setConfirm(confirmation);
+      Alert.alert('OTP sent successfully!');
+
+      const newIndex = currentIndex + 1;
+      flatListRef.current?.scrollToIndex({index: newIndex, animated: true});
+      setCurrentIndex(newIndex);
+    } catch (error) {
+      console.error('Error sending OTP:', error);
+      console.log('Error sending OTP', error.message);
+    }
+  };
+
+  const verifyOtp = async () => {
+    if (!confirm) {
+      Alert.alert('OTP not sent yet. Please enter your phone number first.');
+      return;
+    }
+
+    if (!/^\d{6}$/.test(OTP)) {
+      Alert.alert('Please enter a valid 4-digit OTP.');
+      return;
+    }
+
+    try {
+      await confirm.confirm(OTP); // ✅ This matches Firebase test OTP
+      Alert.alert('Phone number verified successfully!');
+      navigate('UserImageCapture');
+    } catch (error) {
+      console.error('Error verifying OTP:', error.message);
+      Alert.alert('Error verifying OTP', error.message);
+    }
+  };
+
+  // const verifyOtp = async () => {
+  //   if (!confirm) {
+  //     Alert.alert('OTP not sent yet. Please enter your phone number first.');
+  //     return;
+  //   }
+
+  //   if (!/^\d{4}$/.test(OTP)) {
+  //     Alert.alert('Please enter a valid 4-digit OTP.');
+  //     return;
+  //   }
+
+  //   try {
+  //     await confirm.confirm(OTP);
+  //     Alert.alert('Phone number verified successfully!');
+  //     navigate('UserImageCapture');
+  //   } catch (error) {
+  //     console.error('Error verifying OTP:', error.message);
+  //     Alert.alert('Error verifying OTP', error.message);
+  //   }
+  // };
+
   return (
     <View style={styles.container}>
       <View style={{margin: moderateScale(20)}}>
-        <Text
-          style={[
-            styles.HeaderText,
-            {
-              fontSize: moderateScale(22),
-              fontWeight: 800,
-              fontFamily: Fonts.POPPINS_BOLD,
-              color: Colors.WHITE,
-            },
-          ]}>
-          Tenants
-        </Text>
+        <Text style={[styles.HeaderText, styles.header]}>Tenants</Text>
       </View>
+
       <FlatList
         data={CreateTenantsSteps}
         horizontal
@@ -91,135 +144,380 @@ export default function TenantScreen() {
         scrollEnabled={false}
         showsHorizontalScrollIndicator={false}
         pagingEnabled
-        renderItem={({item, index}) => {
-          return (
-            <View style={styles.MainFullWidth}>
-              <View style={styles.Box}>
-                <Text style={styles.Title}>{item?.title}</Text>
-                <View style={styles.PHoneViewHandle}>
-                  {item.type == 'phonenumber' && (
-                    <View
-                      style={{flexDirection: 'row', gap: moderateScale(10)}}>
-                      {/* <CountryPicker
-                        // Props for the picker's behavior
-                        withFilter={true} // Allow searching
-                        withCallingCode={true} // Include calling code in selected data
-                        onSelect={onSelect} // Handle country selection
-                        countryCode={countryCode} // Controlled component: display current selected country
-                        visible={modalVisible} // Control modal visibility
-                        onClose={() => setModalVisible(false)} // Close modal when backdrop is pressed
-                        // Props for customizing the flag button
-                        withFlag={true} // Ensure flags are enabled
-                        withEmoji={false} // Crucial: use image flags instead of emojis for proper rounding
-                        renderFlagButton={renderCustomFlagButton} // Use our custom flag button component
-                        // Hide the default button if using renderFlagButton
-                        withCountryNameButton={false}
-                      />
-                      {country && (
-                        <View style={styles.selectedCountryInfo}>
-                          <Text style={styles.infoText}>
-                            Selected Country: {country.name} ({country.cca2})
-                          </Text>
-                          <Text style={styles.infoText}>
-                            Calling Code: +{country.callingCode[0]}
-                          </Text>
-                        </View>
-                      )} */}
-                      <TextInput
-                        placeholder="Enter 10-digit mobile number"
-                        style={styles.TextInputPhone}
-                        maxLength={10}
-                        placeholderTextColor={Colors.WHITE}
-                        onChangeText={text => phonenumberfun(text)}
-                        keyboardType="number-pad"
-                        returnKeyType="next"
-                        dataDetectorTypes={'phoneNumber'}
-                        value={Phonenumber}
-                      />
-                    </View>
-                  )}
-                  {item?.type == 'OTP' && (
+        renderItem={({item}) => (
+          <View style={styles.MainFullWidth}>
+            <View style={styles.Box}>
+              <View
+                style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                {/* <TouchableOpacity
+                //  onPress={() => navigation.goBack()}
+                >
+                  <Image
+                    style={{
+                      width: moderateScale(24),
+                      height: moderateScale(24),
+                      backgroundColor: '#ccc',
+                      borderRadius: moderateScale(20),
+                    }}
+                    source={require('../assets/image/arrow_left.png')}
+                  />
+                </TouchableOpacity> */}
+                <Text style={[styles.Title, {marginRight: moderateScale(20)}]}>
+                  {item?.title}
+                </Text>
+              </View>
+              <View style={styles.PHoneViewHandle}>
+                {item.type === 'phonenumber' && (
+                  <TextInput
+                    placeholder="Enter 10-digit mobile number"
+                    style={styles.TextInputPhone}
+                    maxLength={10}
+                    placeholderTextColor={Colors.WHITE}
+                    onChangeText={phonenumberfun}
+                    keyboardType="number-pad"
+                    value={Phonenumber}
+                  />
+                )}
+
+                {item.type === 'OTP' && (
+                  <View style={{marginLeft: moderateScale(-8)}}>
                     <OtpInput
-                      numberOfDigits={4}
+                      numberOfDigits={6}
                       placeholder="*"
-                      onTextChange={text => OTPHandle(text)}
+                      onTextChange={OTPHandle}
                       theme={{
                         placeholderTextStyle: {color: Colors.WHITE},
                         containerStyle: {marginTop: 50},
                         pinCodeTextStyle: {color: Colors.WHITE},
                       }}
                     />
-                  )}
-                  <TouchableOpacity
-                    onPress={() => navigate('UserImageCapture')}
-                    disabled={item?.disbled}
-                    style={[
-                      styles.Button,
-                      {
-                        backgroundColor: !item.disbled
-                          ? Colors.BLUE
-                          : Colors.GRAY85,
-                      },
-                    ]}>
-                    <Text style={styles.BTNTEXT}>{item?.buttonText}</Text>
-                  </TouchableOpacity>
-                </View>
+                  </View>
+                )}
+
+                <TouchableOpacity
+                  onPress={item.type === 'phonenumber' ? sendOtp : verifyOtp}
+                  disabled={item?.disbled}
+                  style={[
+                    styles.Button,
+                    {
+                      backgroundColor: !item.disbled
+                        ? Colors.BLUE
+                        : Colors.GRAY85,
+                    },
+                  ]}>
+                  <Text style={styles.BTNTEXT}>{item?.buttonText}</Text>
+                </TouchableOpacity>
               </View>
             </View>
-          );
-        }}
+          </View>
+        )}
       />
     </View>
   );
 }
 
-// const renderCustomFlagButton = props => {
-//   // const flagUri = `https://raw.githubusercontent.com/hampusborgos/country-flags/main/png100px/${props.countryCode.toLowerCase()}.png`;
+// import {
+//   View,
+//   Text,
+//   StyleSheet,
+//   FlatList,
+//   TextInput,
+//   TouchableOpacity,
+//   Alert,
+//   Image,
+//   ActivityIndicator, // Added for loading indicator
+// } from 'react-native';
+// import React, {useRef, useState} from 'react';
+// import {
+//   heightPercentageToDP,
+//   widthPercentageToDP,
+// } from 'react-native-responsive-screen';
+// import {Colors, Fonts} from '../utils/Theme'; // Make sure these are defined
+// import {OtpInput} from 'react-native-otp-entry'; // Make sure this package is installed
+// import {moderateScale, screenWidth} from '../utils/Metrics'; // Make sure these are defined
+// import {useNavigation} from '@react-navigation/native';
+// import auth from '@react-native-firebase/auth'; // Ensure this is imported correctly
 
-//   const flagSource = {
-//     uri: `https://raw.githubusercontent.com/hjnilsson/country-flags/master/png100px/${countryCode.toLowerCase()}.png`,
+// export default function TenantScreen() {
+//   const {navigate} = useNavigation();
+
+//   const [Phonenumber, setPhonenumber] = useState('');
+//   const [OTP, setOTP] = useState('');
+//   const [confirm, setConfirm] = useState(null); // Stores the confirmation result from Firebase
+//   const [withCallingCode] = useState(`+91`); // Indian country code
+//   const [loading, setLoading] = useState(false); // To show loading state
+
+//   const [currentIndex, setCurrentIndex] = useState(0);
+//   const flatListRef = useRef(null);
+
+//   // Define your Firebase Test Phone Numbers and their corresponding OTPs
+//   // IMPORTANT: You MUST configure these in your Firebase Console under
+//   // Authentication -> Sign-in method -> Phone -> Phone numbers for testing
+//   // const firebaseTestNumbers = {
+//   //   '+911234567890': '123456', // Example: Phone Number: +911234567890, OTP: 123456
+//   //   // Aap yahan aur bhi test numbers add kar sakte hain, provided ki woh Firebase console mein bhi added hon:
+//   //   // '+911112223334': '987654',
+//   // };
+
+//   const CreateTenantsSteps = [
+//     {
+//       title: 'Enter Mobile Number',
+//       buttonText: 'Continue',
+//       type: 'phonenumber',
+//       // Enable button only if phone number is 10 digits
+//       disabled: !(Phonenumber?.length === 10),
+//     },
+//     {
+//       title: 'OTP',
+//       buttonText: 'Verify',
+//       type: 'OTP',
+//       // Enable button only if OTP is 6 digits
+//       disabled: !(OTP?.length === 6),
+//     },
+//   ];
+
+//   const phonenumberfun = text => {
+//     setPhonenumber(text);
 //   };
 
+//   const OTPHandle = otp => {
+//     setOTP(otp);
+//   };
+
+//   // ## Send OTP Function
+
+//   const sendOtp = async () => {
+//     if (Phonenumber.length !== 10) {
+//       Alert.alert(
+//         'Invalid Number',
+//         'Please enter a valid 10-digit mobile number.',
+//       );
+//       return;
+//     }
+
+//     const fullPhoneNumber = `${withCallingCode}${Phonenumber}`;
+
+//     setLoading(true);
+//     try {
+//       // Ab seedha real phone number par OTP send hoga
+//       const confirmationResult = await auth().signInWithPhoneNumber(
+//         fullPhoneNumber,
+//       );
+//       setConfirm(confirmationResult); // Store the confirmation object
+
+//       Alert.alert('OTP Sent!', `OTP has been sent to ${fullPhoneNumber}.`);
+
+//       // Next step (OTP input) pe move karein
+//       const newIndex = currentIndex + 1;
+//       flatListRef.current?.scrollToIndex({index: newIndex, animated: true});
+//       setCurrentIndex(newIndex);
+//     } catch (error) {
+//       console.error('Error sending OTP:', error);
+//       let errorMessage = 'Failed to send OTP. Please try again.';
+//       if (error.code === 'auth/too-many-requests') {
+//         errorMessage = 'Too many requests. Please try again later.';
+//       } else if (error.code === 'auth/invalid-phone-number') {
+//         errorMessage = 'Invalid phone number format.';
+//       } else if (
+//         error.message.includes('quota') ||
+//         error.message.includes('BILLING_NOT_ENABLED')
+//       ) {
+//         // This error will now be seen more frequently if you are still on Spark plan
+//         errorMessage =
+//           'SMS quota exceeded for this project. Please upgrade to Blaze plan if you need more OTPs, or wait until tomorrow.';
+//       }
+//       Alert.alert('OTP Error', errorMessage);
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   // ## Verify OTP Function
+
+//   const verifyOtp = async () => {
+//     if (!confirm) {
+//       Alert.alert(
+//         'Verification Error',
+//         'OTP not sent yet. Please enter your phone number first.',
+//       );
+//       return;
+//     }
+
+//     if (OTP.length !== 6) {
+//       // Firebase OTPs are typically 6 digits
+//       Alert.alert('Invalid OTP', 'Please enter a 6-digit OTP.');
+//       return;
+//     }
+
+//     setLoading(true);
+//     try {
+//       await confirm.confirm(OTP);
+//       Alert.alert('Success!', 'Phone number verified successfully!');
+//       // Navigate to the next screen after successful verification
+//       navigate('UserImageCapture');
+//     } catch (error) {
+//       console.error('Error verifying OTP:', error.message);
+//       let errorMessage = 'Failed to verify OTP. Please try again.';
+//       if (error.code === 'auth/invalid-verification-code') {
+//         errorMessage = 'Invalid OTP. Please check the code and try again.';
+//       } else if (error.code === 'auth/code-expired') {
+//         errorMessage = 'OTP has expired. Please resend a new OTP.';
+//       } else if (error.code === 'auth/too-many-requests') {
+//         errorMessage =
+//           'Too many verification attempts. Please try again later.';
+//       }
+//       Alert.alert('Verification Failed', errorMessage);
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   // --- UI Rendering ---
 //   return (
-//     <TouchableOpacity
-//       onPress={() => setModalVisible(true)} // Open the picker modal
-//       style={styles.flagButtonContainer}>
-//       <View style={styles.roundFlagWrapper}>
-//         <Image
-//           source={{uri: flagUri}}
-//           style={styles.flagImage}
-//           onError={() =>
-//             console.log('Error loading flag for:', props.countryCode)
-//           }
-//         />
-//       </View>
-//       {/* Optional: Display country name or calling code next to the flag */}
-//       {country && (
-//         <Text style={styles.buttonText}>
-//           {country.name} (+{country.callingCode[0]})
-//         </Text>
+//     <View style={styles.container}>
+//       {loading && ( // Loading indicator overlay
+//         <View style={styles.loadingOverlay}>
+//           <ActivityIndicator size="large" color={Colors.BLUE} />
+//         </View>
 //       )}
-//     </TouchableOpacity>
+//       <View style={{margin: moderateScale(20)}}>
+//         <Text style={[styles.HeaderText, styles.header]}>Tenants</Text>
+//       </View>
+
+//       <FlatList
+//         data={CreateTenantsSteps}
+//         horizontal
+//         ref={flatListRef}
+//         scrollEnabled={false} // Disable manual scrolling
+//         showsHorizontalScrollIndicator={false}
+//         pagingEnabled // For smooth step transitions
+//         renderItem={({item}) => (
+//           <View style={styles.MainFullWidth}>
+//             <View style={styles.Box}>
+//               <View
+//                 style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+//                 {currentIndex > 0 && ( // Show back button only on OTP screen
+//                   <TouchableOpacity
+//                     onPress={() => {
+//                       const newIndex = currentIndex - 1;
+//                       flatListRef.current?.scrollToIndex({
+//                         index: newIndex,
+//                         animated: true,
+//                       });
+//                       setCurrentIndex(newIndex);
+//                     }}>
+//                     <Image
+//                       style={{
+//                         width: moderateScale(24),
+//                         height: moderateScale(24),
+//                         backgroundColor: '#ccc',
+//                         borderRadius: moderateScale(20),
+//                       }}
+//                       source={require('../assets/image/arrow_left.png')} // Make sure this path is correct
+//                     />
+//                   </TouchableOpacity>
+//                 )}
+//                 {/* Agar current index 0 hai (phone number screen), to title ko left mein align karna padega
+//                     ya center ke liye marginLeft adjust karna padega kyunki back button nahi hai. */}
+//                 <Text
+//                   style={[
+//                     styles.Title,
+//                     {
+//                       marginRight: moderateScale(20),
+//                       marginLeft: currentIndex === 0 ? 0 : moderateScale(20),
+//                     },
+//                   ]}>
+//                   {item?.title}
+//                 </Text>
+//               </View>
+
+//               <View style={styles.PHoneViewHandle}>
+//                 {item.type === 'phonenumber' && (
+//                   <TextInput
+//                     placeholder="Enter 10-digit mobile number"
+//                     style={styles.TextInputPhone}
+//                     maxLength={10}
+//                     placeholderTextColor={Colors.WHITE}
+//                     onChangeText={phonenumberfun}
+//                     keyboardType="number-pad"
+//                     value={Phonenumber}
+//                   />
+//                 )}
+
+//                 {item.type === 'OTP' && (
+//                   <View style={{marginLeft: moderateScale(-8)}}>
+//                     <OtpInput
+//                       numberOfDigits={6} // Firebase OTPs are typically 6 digits
+//                       placeholder="*"
+//                       onTextChange={OTPHandle}
+//                       theme={{
+//                         placeholderTextStyle: {color: Colors.WHITE},
+//                         containerStyle: {marginTop: moderateScale(50)},
+//                         pinCodeTextStyle: {color: Colors.WHITE},
+//                         pinCodeContainerStyle: {
+//                           // Style for individual OTP boxes
+//                           borderColor: Colors.WHITE,
+//                           borderWidth: 1,
+//                           borderRadius: moderateScale(5),
+//                           height: moderateScale(45), // Adjust size if needed
+//                           width: moderateScale(45),
+//                           marginHorizontal: moderateScale(2),
+//                         },
+//                       }}
+//                       // Optionally, aap yahan test OTP ko prefill kar sakte hain for quick testing
+//                       // defaultValue={Phonenumber && firebaseTestNumbers[`+91${Phonenumber}`] ? firebaseTestNumbers[`+91${Phonenumber}`] : ''}
+//                     />
+//                   </View>
+//                 )}
+
+//                 <TouchableOpacity
+//                   onPress={item.type === 'phonenumber' ? sendOtp : verifyOtp}
+//                   disabled={item?.disabled || loading} // Disable button when loading or if inputs are invalid
+//                   style={[
+//                     styles.Button,
+//                     {
+//                       backgroundColor:
+//                         !item.disabled && !loading
+//                           ? Colors.BLUE
+//                           : Colors.GRAY85,
+//                     },
+//                   ]}>
+//                   {loading ? (
+//                     <ActivityIndicator color={Colors.WHITE} />
+//                   ) : (
+//                     <Text style={styles.BTNTEXT}>{item?.buttonText}</Text>
+//                   )}
+//                 </TouchableOpacity>
+//               </View>
+//             </View>
+//           </View>
+//         )}
+//       />
+//     </View>
 //   );
-// };
+// }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    // alignItems: 'center'
+  },
+  header: {
+    fontSize: moderateScale(22),
+    fontWeight: '800',
+    fontFamily: Fonts.POPPINS_BOLD,
+    color: Colors.WHITE,
   },
   MainFullWidth: {
     width: widthPercentageToDP(100),
     marginTop: heightPercentageToDP(15),
   },
   Box: {
-    width: '80%',
-    marginHorizontal: 'auto',
-    // height: heightPercentageToDP(40),
+    width: screenWidth * 0.8,
+    alignSelf: 'center',
     backgroundColor: '#121826',
     borderRadius: moderateScale(8),
-    padding: 25,
+    padding: moderateScale(20),
   },
   Title: {
     fontSize: 16,
@@ -242,7 +540,6 @@ const styles = StyleSheet.create({
   Button: {
     width: '100%',
     height: 50,
-    backgroundColor: Colors.BLUE,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 7,
@@ -252,15 +549,5 @@ const styles = StyleSheet.create({
     color: Colors.WHITE,
     fontWeight: '500',
     fontFamily: Fonts.POPPINS_BOLD,
-  },
-  flagContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: 20, // Half of width/height
-    overflow: 'hidden',
-    borderWidth: 1,
-    borderColor: '#ccc',
-    justifyContent: 'center',
-    alignItems: 'center',
   },
 });
