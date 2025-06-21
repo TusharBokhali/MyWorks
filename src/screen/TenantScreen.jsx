@@ -8,25 +8,26 @@ import {
   Alert,
   Image,
 } from 'react-native';
-import React, {useRef, useState} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   heightPercentageToDP,
   widthPercentageToDP,
 } from 'react-native-responsive-screen';
-import {Colors, Fonts} from '../utils/Theme';
-import {OtpInput} from 'react-native-otp-entry';
-import {moderateScale, screenWidth} from '../utils/Metrics';
-import {useNavigation} from '@react-navigation/native';
-import auth, {getAuth} from '@react-native-firebase/auth';
+import { Colors, Fonts } from '../utils/Theme';
+import { OtpInput } from 'react-native-otp-entry';
+import { moderateScale, screenWidth } from '../utils/Metrics';
+import { useNavigation } from '@react-navigation/native';
+import { initializeApp } from 'firebase/app';
+import { signInWithPhoneNumber } from 'firebase/auth';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { auth } from '../../firebaseconfig';
 
 export default function TenantScreen() {
-  const {navigate} = useNavigation();
-
+  const { navigate } = useNavigation();
   const [Phonenumber, setPhonenumber] = useState('');
   const [OTP, setOTP] = useState('');
   const [confirm, setConfirm] = useState(null);
   const [withCallingCode] = useState(`+91`);
-
   const [currentIndex, setCurrentIndex] = useState(0);
   const flatListRef = useRef(null);
 
@@ -45,9 +46,23 @@ export default function TenantScreen() {
     },
   ];
 
-  const phonenumberfun = text => {
-    setPhonenumber(text);
-  };
+  
+
+ const phonenumberfun = async (text) => {
+  setPhonenumber(text);
+  
+  if (text?.length >= 10) {
+
+    try {
+    const confirmation = await signInWithPhoneNumber(auth, `+918155980336`);
+    setConfirm(confirmation);
+    console.log("OTP sent:", confirmation);
+  } catch (error) {
+    console.error("OTP Send Error:", error);
+    Alert.alert("Failed to send OTP", error.message);
+  }
+  }
+};
 
   const OTPHandle = otp => {
     setOTP(otp);
@@ -59,55 +74,11 @@ export default function TenantScreen() {
       return;
     }
 
-    const formattedPhoneNumber = `${withCallingCode}${Phonenumber}`;
 
-    // ✅ Enforce only test numbers
-    const allowedTestNumbers = ['+911234567890']; 
-    const testOtpCode = '123456';
-
-    if (!allowedTestNumbers.includes(formattedPhoneNumber)) {
-      Alert.alert(
-        'This is a test app. Only predefined test numbers are allowed.\n\nUse +911234567890',
-      );
-      return;
-    }
-
-    try {
-      const formattedPhoneNumber = `${withCallingCode}${Phonenumber}`;
-      const confirmation = await getAuth().signInWithPhoneNumber(
-        formattedPhoneNumber,
-      );
-      setConfirm(confirmation);
-      Alert.alert('OTP sent successfully!');
-
-      const newIndex = currentIndex + 1;
-      flatListRef.current?.scrollToIndex({index: newIndex, animated: true});
-      setCurrentIndex(newIndex);
-    } catch (error) {
-      console.error('Error sending OTP:', error);
-      console.log('Error sending OTP', error.message);
-    }
   };
 
   const verifyOtp = async () => {
-    if (!confirm) {
-      Alert.alert('OTP not sent yet. Please enter your phone number first.');
-      return;
-    }
 
-    if (!/^\d{6}$/.test(OTP)) {
-      Alert.alert('Please enter a valid 4-digit OTP.');
-      return;
-    }
-
-    try {
-      await confirm.confirm(OTP); // ✅ This matches Firebase test OTP
-      Alert.alert('Phone number verified successfully!');
-      navigate('UserImageCapture');
-    } catch (error) {
-      console.error('Error verifying OTP:', error.message);
-      Alert.alert('Error verifying OTP', error.message);
-    }
   };
 
   // const verifyOtp = async () => {
@@ -133,7 +104,7 @@ export default function TenantScreen() {
 
   return (
     <View style={styles.container}>
-      <View style={{margin: moderateScale(20)}}>
+      <View style={{ margin: moderateScale(20) }}>
         <Text style={[styles.HeaderText, styles.header]}>Tenants</Text>
       </View>
 
@@ -144,11 +115,11 @@ export default function TenantScreen() {
         scrollEnabled={false}
         showsHorizontalScrollIndicator={false}
         pagingEnabled
-        renderItem={({item}) => (
+        renderItem={({ item }) => (
           <View style={styles.MainFullWidth}>
             <View style={styles.Box}>
               <View
-                style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                 {/* <TouchableOpacity
                 //  onPress={() => navigation.goBack()}
                 >
@@ -162,7 +133,7 @@ export default function TenantScreen() {
                     source={require('../assets/image/arrow_left.png')}
                   />
                 </TouchableOpacity> */}
-                <Text style={[styles.Title, {marginRight: moderateScale(20)}]}>
+                <Text style={[styles.Title, { marginRight: moderateScale(20) }]}>
                   {item?.title}
                 </Text>
               </View>
@@ -180,22 +151,22 @@ export default function TenantScreen() {
                 )}
 
                 {item.type === 'OTP' && (
-                  <View style={{marginLeft: moderateScale(-8)}}>
+                  <View style={{ marginLeft: moderateScale(-8) }}>
                     <OtpInput
                       numberOfDigits={6}
                       placeholder="*"
                       onTextChange={OTPHandle}
                       theme={{
-                        placeholderTextStyle: {color: Colors.WHITE},
-                        containerStyle: {marginTop: 50},
-                        pinCodeTextStyle: {color: Colors.WHITE},
+                        placeholderTextStyle: { color: Colors.WHITE },
+                        containerStyle: { marginTop: 50 },
+                        pinCodeTextStyle: { color: Colors.WHITE },
                       }}
                     />
                   </View>
                 )}
 
                 <TouchableOpacity
-                  onPress={item.type === 'phonenumber' ? sendOtp : verifyOtp}
+                  onPress={item.type === 'phonenumber' ? phonenumberfun : verifyOtp}
                   disabled={item?.disbled}
                   style={[
                     styles.Button,

@@ -7,7 +7,7 @@ import { Colors, Fonts } from '../utils/Theme';
 import { Images } from '../assets/image/image';
 import LinearGradient from 'react-native-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { heightPercentageToDP, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { heightPercentageToDP, heightPercentageToDP as hp, widthPercentageToDP } from 'react-native-responsive-screen';
 import { useNavigation } from '@react-navigation/native';
 
 export default function DrawerView({
@@ -311,8 +311,8 @@ export default function DrawerView({
 
 const styles = StyleSheet.create({
     container: {
-        width: screenWidth * 0.8,
-        height: screenHeight - 76,
+        width: widthPercentageToDP(80),
+        height: heightPercentageToDP(87),
         backgroundColor: '#272C48',
         position: 'absolute',
         bottom: 0,
